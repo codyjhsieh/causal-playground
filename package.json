@@ -1,0 +1,7 @@
+{
+  "name": "causal-playground",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "An interactive, animated platform for learning causal inference by playing."
+}
