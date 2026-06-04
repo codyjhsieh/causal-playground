@@ -7,6 +7,8 @@ animation does the teaching.
 
 No build step, no dependencies, fully offline. Just vanilla ES modules + canvas/SVG.
 
+**▶ Live: https://codyhsieh.com/causal-playground/**
+
 ## Run it
 
 ```bash
