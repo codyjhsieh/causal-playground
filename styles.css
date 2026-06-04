@@ -428,3 +428,31 @@ input[type=range]::-webkit-slider-thumb:active { cursor: grabbing; }
   .stage-title { font-size: 11px; white-space: normal; word-break: break-word; line-height: 1.4; }
   .lesson, .stage, .panel-section, .eli5, .challenge { max-width: 100%; }
 }
+
+/* ===== Bulletproof mobile fit: nothing in any interactive may overflow ===== */
+@media (max-width: 820px) {
+  /* No element inside a diagram stage may exceed the stage width → no cutoff */
+  .stage, .stage * { max-width: 100% !important; }
+  /* Canvases, SVGs and images scale down keeping their aspect ratio */
+  .stage canvas, .stage svg, .stage img,
+  .panel canvas, .panel svg { height: auto !important; }
+  /* Any side-by-side row/column container stacks vertically on phones */
+  .stage-row,
+  .stage [class*="row"], .stage [class*="cols"], .stage [class*="grid"],
+  .stage [style*="display: flex"], .stage [style*="display:flex"],
+  .stage [style*="flex-direction: row"], .stage [style*="flex-direction:row"] {
+    flex-direction: column !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+  /* Panel safety: tables and wide content stay inside the column */
+  .panel, .panel * { max-width: 100% !important; }
+  .panel table { display: block; overflow-x: auto; }
+  /* belt-and-suspenders: clip nothing, but stop a stray child from scrolling the page */
+  .lesson { overflow-x: clip; }
+}
+
+@media (max-width: 820px) {
+  .stage-title, .stage p { white-space: normal !important; word-break: break-word; overflow-wrap: anywhere; }
+}
