@@ -1,5 +1,5 @@
 // d-Separation, grounded in real single-cell protein data.
-// The graph is a readable 7-node subgraph of the Sachs et al. (2005) consensus
+// The graph is a readable 8-node subgraph of the Sachs et al. (2005) consensus
 // signaling network (Science 2005, ~853 flow-cytometry measurements of 11
 // phosphoproteins). It contains every junction type:
 //   chain:   PKA → Raf → Mek
@@ -22,7 +22,7 @@ import { rows, meta } from "../data/sachs.js";
 import { col, complete, dataBadge } from "../lib/data.js";
 import { mean, correlation } from "../lib/stats.js";
 
-// ---- 7-node Sachs subgraph ---------------------------------------------------
+// ---- 8-node Sachs subgraph ---------------------------------------------------
 // Nodes: PKA, PKC, Raf, Mek, Erk, Plcg, PIP2, PIP3
 // Subset of meta.trueEdges chosen to give chain, fork, and collider structures
 // in a legible layout.
@@ -181,7 +181,7 @@ export function mount(root) {
     panelSection("Junctions in this graph", [
       junctionRow("chain", "PKA → Raf → Mek", "open; blocked by conditioning on Raf", "var(--ctrl)"),
       junctionRow("fork",  "Raf ← PKA → Erk",  "open; blocked by conditioning on PKA", "var(--gold)"),
-      junctionRow("collider", "Plcg → PIP2 ← PIP3", "blocked; OPENED by conditioning on PIP2", "var(--neg)"),
+      junctionRow("collider", "Plcg → PIP2 ← PIP3", "blocked; opened by conditioning on PIP2", "var(--neg)"),
     ]),
     panelSection("", [
       h("div", { class: "btn-row" }, [
@@ -194,12 +194,12 @@ export function mount(root) {
   );
 
   caption.innerHTML =
-    "This graph is a 7-node subgraph of the <strong>Sachs et al. (2005)</strong> consensus signaling network " +
+    "This graph is an 8-node subgraph of the <strong>Sachs et al. (2005)</strong> consensus signaling network " +
     "(Science 308:523–529), derived from ~853 single-cell flow-cytometry measurements of 11 phosphoproteins. " +
     "Graphical d-separation is a <em>structural</em> claim: the graph predicts which conditional correlations " +
     "should vanish in the real data. The empirical partial correlation (computed by linear residualization on " +
     "the conditioning set) confirms or refutes the prediction. " +
-    "Key structures: the <span class='k'>PKA → Raf → Mek</span> chain is a mediator — " +
+    "Key structures: in the <span class='k'>PKA → Raf → Mek</span> chain, Raf mediates between PKA and Mek — " +
     "conditioning on Raf blocks the indirect path. " +
     "The <span class='k'>Plcg → PIP2 ← PIP3</span> collider is naturally blocked; " +
     "conditioning on PIP2 would <strong>open</strong> a spurious path. " +

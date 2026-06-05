@@ -47,11 +47,11 @@ export const questions = [
     q: "The Sachs et al. (2005) benchmark dataset, used to evaluate NOTEARS in the playground, has the following characteristics — which statement is <strong>correct</strong>?",
     choices: [
       "It contains gene-expression microarray data from 11,000 human cancer cell lines, with d = 11 variables and N = 100,000 samples.",
-      "It contains single-cell flow-cytometry measurements of 11 phosphoproteins in human T-cells (N ≈ 853 observations), with a 17-edge consensus causal DAG established from interventional experiments.",
+      "It contains single-cell flow-cytometry measurements of 11 phosphoproteins in human T-cells (N ≈ 853 observations), with a 19-edge consensus causal DAG established from interventional experiments.",
       "It is a fully synthetic dataset generated from a known linear-Gaussian DAG, making the ground truth trivially recoverable.",
       "It contains 11 variables and 853,000 observations; the large N means any structure-learning algorithm achieves SHD = 0."
     ],
     answer: 1,
-    explain: "The Sachs dataset consists of <strong>single-cell flow-cytometry</strong> measurements of 11 phosphoproteins (Raf, Mek, Plcg, PIP2, PIP3, Erk, Akt, PKA, PKC, P38, Jnk) from human T-cells, with N ≈ 853 complete observations. The 17-edge consensus DAG was established by Sachs et al. using targeted perturbation experiments (interventions), not from observational data alone. This is precisely why the observational NOTEARS challenge is hard — recovering all 17 directed edges from N = 853 observations using only the observational sample is genuinely difficult, and SHD = 0 from observational data alone is not guaranteed even in principle due to Markov equivalence."
+    explain: "The Sachs dataset consists of <strong>single-cell flow-cytometry</strong> measurements of 11 phosphoproteins (Raf, Mek, Plcg, PIP2, PIP3, Erk, Akt, PKA, PKC, P38, Jnk) from human T-cells, with N ≈ 853 complete observations. The 19-edge consensus DAG was established by Sachs et al. using targeted perturbation experiments (interventions), not from observational data alone. This is precisely why the observational NOTEARS challenge is hard — recovering all 19 directed edges from N = 853 observations using only the observational sample is genuinely difficult, and SHD = 0 from observational data alone is not guaranteed even in principle due to Markov equivalence."
   },
 ];

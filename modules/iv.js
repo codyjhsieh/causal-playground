@@ -340,7 +340,7 @@ export function mount(root) {
   // ---- layout ----
   const { root: layout, stage, panel, caption } = lessonLayout({
     title: "Instrumental Variables",
-    idea: "Card (1995): growing up near a 4-year college (nearc4) raises schooling but plausibly doesn't directly affect wages — making it a valid instrument to recover an unbiased return to education despite unobserved ability bias.",
+    idea: "Card (1995): growing up near a 4-year college (nearc4) raises schooling but plausibly does not directly affect wages — making it a valid instrument. Two-stage least squares (2SLS) uses only the exogenous college-proximity variation to produce a consistent estimate of the return to schooling, correcting for unobserved ability bias.",
   });
 
   // ---- DAG -------------------------------------------------------------------
@@ -442,17 +442,18 @@ export function mount(root) {
 
   // ---- caption ---------------------------------------------------------------
   caption.innerHTML =
-    "<strong>Card (1995)</strong> — Using Geographic Variation in College Proximity to Estimate the Return to Schooling. " +
-    "Naïve OLS regresses log wages on education, but <em>ability</em> confounds both (ability raises schooling <em>and</em> wages), " +
-    "biasing the coefficient. <strong>nearc4</strong> (grew up near a 4-year college) is a valid instrument: " +
-    "<strong>Relevance</strong> — proximity raises schooling by ≈ 0.83 years. " +
-    "<strong>Exclusion</strong> — college proximity affects wages only via the schooling it induces, not directly. " +
-    "<strong>Independence</strong> — conditional on controls, college proximity is unrelated to unobserved ability. " +
-    "The Wald / 2SLS estimate (≈ 0.13 per extra year) <em>exceeds</em> the naïve OLS estimate (≈ 0.07), " +
-    "consistent with measurement error and ability-bias stories in the literature. " +
-    "Shrink the bootstrap sample size to demonstrate IV's variance cost: as n falls, the IV estimator's spread <em>explodes</em> " +
-    "while OLS stays tight — the fundamental bias-variance trade-off of instrumental variables. " +
-    "<em>Real data: Card (1995), n ≈ 3010, NLSYM.</em>";
+    "<strong>Card (1995)</strong> — &ldquo;Using Geographic Variation in College Proximity to Estimate the Return to Schooling,&rdquo; " +
+    "in <em>Aspects of Labour Market Behaviour: Essays in Honour of John Vanderkamp</em>. " +
+    "Naïve OLS regresses log wages on education, but unobserved <em>ability</em> raises both schooling and wages, " +
+    "confounding the coefficient. <strong>nearc4</strong> (grew up near a 4-year college) is used as an instrument: " +
+    "<strong>Relevance</strong> — proximity raises schooling by ≈ 0.83 years (first stage). " +
+    "<strong>Exclusion</strong> — college proximity affects wages only through the schooling it induces, not through a direct path. " +
+    "<strong>Independence</strong> — conditional on controls, proximity is uncorrelated with unobserved ability. " +
+    "The Wald / 2SLS estimate (≈ 0.13 log-wage points per year of schooling) <em>exceeds</em> the naïve OLS estimate (≈ 0.07), " +
+    "consistent with attenuation bias from measurement error in reported schooling and/or heterogeneous returns for college-proximity compliers. " +
+    "Shrinking the bootstrap sample size illustrates IV&rsquo;s variance cost: as <em>n</em> falls, the IV estimator&rsquo;s spread <em>explodes</em> " +
+    "while OLS stays tight — the fundamental bias&ndash;variance trade-off of instrumental variables. " +
+    "<em>Data: Card (1995) NLSYM sample, n ≈ 3,010.</em>";
 
   root.appendChild(layout);
 

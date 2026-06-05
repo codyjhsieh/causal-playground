@@ -203,7 +203,7 @@ export function mount(root) {
   // ── Layout ──────────────────────────────────────────────────────────────────
   const { root: layout, stage, panel, caption } = lessonLayout({
     title: "Synthetic Control",
-    idea:  "No clean control group? Build one. Find a weighted combination of untreated states that mirrors California's cigarette sales before 1989 — then read the post-treatment gap as the effect of Prop 99.",
+    idea:  "No clean control group? Build one. Find a weighted combination of untreated states that mirrors California's cigarette sales before 1989 — then read the post-treatment gap as the causal effect of Proposition 99.",
   });
 
   // Canvas
@@ -238,7 +238,7 @@ export function mount(root) {
 
   // ── Challenge ─────────────────────────────────────────────────────────────
   const chal = challenge({
-    goal: "Fit the synthetic control (RMSE < 5 packs) and read the post-1989 gap — how much did Prop 99 reduce smoking?",
+    goal: "Fit the synthetic control (pre-period RMSE &lt; 5 packs) and read the 2000 gap — Abadie, Diamond &amp; Hainmueller (2010) report approximately −26 packs per capita.",
   });
 
   // ── Controls ────────────────────────────────────────────────────────────────
@@ -299,15 +299,13 @@ export function mount(root) {
   );
 
   caption.innerHTML =
-    "The <strong>synthetic control</strong> is the convex combination of donor states " +
+    "The <strong>synthetic control</strong> (Abadie, Diamond &amp; Hainmueller 2010) is the convex combination of donor states " +
     "(<em>w</em><sub><em>j</em></sub> ≥ 0, Σ<em>w</em><sub><em>j</em></sub> = 1) that minimizes " +
-    "Σ<sub><em>t</em>&lt;1989</sub> (packs<sub>CA,<em>t</em></sub> − Σ<sub><em>j</em></sub> <em>w</em><sub><em>j</em></sub> packs<sub><em>j</em>,<em>t</em></sub>)². " +
-    "The pre-period lines nearly coincide (good counterfactual fit); after 1989 California " +
-    "diverges sharply below its synthetic twin. That gap is the estimated effect of Prop 99 — " +
-    "a ~25 pack/year reduction in per-capita smoking by 2000. " +
-    "The placebo check applies the same method to an untreated state: its gap stays near zero, " +
-    "lending credibility to California's signal. " +
-    "Abadie &amp; Gardeazabal (2003); Abadie, Diamond &amp; Hainmueller (2010).";
+    "pre-treatment fit: Σ<sub><em>t</em>&lt;1989</sub> (packs<sub>CA,<em>t</em></sub> − Σ<sub><em>j</em></sub> <em>w</em><sub><em>j</em></sub> packs<sub><em>j</em>,<em>t</em></sub>)². " +
+    "After 1989, California diverges sharply below its synthetic twin — that gap estimates the causal effect of California's Proposition 99 tobacco tax, " +
+    "approximately <strong>−26 packs per capita per year</strong> by 2000. " +
+    "The placebo check applies the same method to an untreated donor state: its gap stays near zero, " +
+    "lending credibility to California's signal via permutation inference.";
 
   root.appendChild(layout);
 

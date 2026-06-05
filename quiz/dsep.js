@@ -1,6 +1,6 @@
 export const questions = [
   {
-    q: "In the Sachs signaling network subgraph, the path <b>PKA → Raf → Mek</b> is a chain. What happens to the association between PKA and Mek when you condition on Raf?",
+    q: "In the Sachs signaling network subgraph, the path <strong>PKA → Raf → Mek</strong> is a chain. What happens to the association between PKA and Mek when you condition on Raf?",
     choices: [
       "The association strengthens, because conditioning on an intermediate amplifies the signal",
       "The association is blocked; PKA and Mek become d-separated given Raf",
@@ -11,7 +11,7 @@ export const questions = [
     explain: "In a chain A → B → C, conditioning on the middle node B blocks the path: all information flow from A to C through this route is cut. PKA → Raf → Mek is such a chain; conditioning on Raf makes PKA and Mek d-separated along this path. The PKA → Erk direct arrow is irrelevant to the PKA–Mek path through Raf.",
   },
   {
-    q: "The Sachs graph contains the fork <b>Raf ← PKA → Erk</b>. Before conditioning on anything, are Raf and Erk d-separated?",
+    q: "The Sachs graph contains the fork <strong>Raf ← PKA → Erk</strong>. Before conditioning on anything, are Raf and Erk d-separated?",
     choices: [
       "Yes — there is no direct arrow between Raf and Erk, so they are independent",
       "No — the fork is open by default; PKA is a common cause that transmits association",
@@ -22,7 +22,7 @@ export const questions = [
     explain: "A fork X ← Z → Y is open (d-connected) unconditionally. PKA causes both Raf and Erk, so they share a common cause and will be correlated even without a direct edge. D-separation is a structural claim about the graph — sample size is irrelevant to whether paths are open or blocked.",
   },
   {
-    q: "Select <b>all</b> true statements about the collider <b>Plcg → PIP2 ← PIP3</b> in the Sachs graph.",
+    q: "Select <strong>all</strong> true statements about the collider <strong>Plcg → PIP2 ← PIP3</strong> in the Sachs graph.",
     choices: [
       "Without conditioning, the path Plcg — PIP2 — PIP3 is blocked at the collider PIP2",
       "Conditioning on PIP2 opens this path, creating a spurious association between Plcg and PIP3",

@@ -327,7 +327,7 @@ export function mount(root) {
   // ── Layout ─────────────────────────────────────────────────────────────
   const { root: layout, stage, panel, caption } = lessonLayout({
     title: "Staggered DiD & the TWFE Trap",
-    idea:  "States adopt stand-your-ground laws in different years. The standard regression secretly uses already-treated states as controls — a forbidden comparison that contaminates the estimate.",
+    idea:  "Building on difference-in-differences: when units adopt a policy in different years, the standard two-way fixed-effects regression secretly uses already-treated states as controls for later adopters — a forbidden comparison that can bias or flip the estimated effect (Cheng &amp; Hoekstra 2013; Goodman-Bacon 2021).",
   });
 
   // Canvas
@@ -393,14 +393,13 @@ export function mount(root) {
   );
 
   caption.innerHTML =
-    "TWFE regression on a staggered panel is a <strong>variance-weighted average</strong> of all 2×2 DiD " +
-    "comparisons — including ones where <em>already-treated</em> early adopters serve as controls for " +
-    "later adopters. Because their treatment effect is baked into their baseline level, this " +
-    "<strong>contaminates the control group</strong> and can bias — or even reverse — the overall estimate. " +
-    "The clean Callaway–Sant'Anna ATT restricts each cohort's control pool to " +
-    "<em>not-yet-treated</em> and <em>never-treated</em> units, eliminating the forbidden comparisons. " +
-    "Naive TWFE: <strong>" + fmtCoef(TWFE_COEF) + "</strong> · Clean ATT: <strong>" + fmtCoef(CLEAN_ATT) + "</strong> · " +
-    "Goodman-Bacon (2021); Callaway &amp; Sant'Anna (2021); " +
+    "When units adopt a policy in different years, standard <strong>two-way fixed-effects (TWFE)</strong> regression is a variance-weighted average of all 2×2 difference-in-differences comparisons — " +
+    "including <em>forbidden</em> ones where already-treated early adopters serve as controls for later adopters (Goodman-Bacon 2021). " +
+    "Because early adopters' outcomes already embed their treatment effect, using them as a control group <strong>contaminates the estimate</strong> and can bias — or even flip — the overall coefficient. " +
+    "The Callaway &amp; Sant'Anna (2021) estimator fixes this by restricting each cohort's control pool to <em>not-yet-treated</em> and <em>never-treated</em> units only. " +
+    "Data: Cheng &amp; Hoekstra (2013) castle-doctrine laws — " +
+    "naive TWFE: <strong>" + fmtCoef(TWFE_COEF) + "</strong> · clean ATT: <strong>" + fmtCoef(CLEAN_ATT) + "</strong>. " +
+    "References: Goodman-Bacon (2021); Callaway &amp; Sant'Anna (2021); " +
     "de Chaisemartin &amp; D'Haultf&oelig;uille (2020); Sun &amp; Abraham (2021).";
 
   root.appendChild(layout);

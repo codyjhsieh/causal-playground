@@ -22,7 +22,7 @@ export const questions = [
     explain: "Adjusting for a descendant of X (e.g., a variable caused by the treatment) introduces bias by partially blocking the causal path itself or by opening new non-causal paths. The criterion is: Z blocks all backdoor paths AND Z contains no descendant of X. Containing every predictor of Y (A) is unnecessary and can even introduce collider bias. Being a collider (C) would open a path rather than block it. Binariness (D) is irrelevant."
   },
   {
-    q: "In the LaLonde DAG on this module, each of the 8 pre-treatment covariates (age, educ, race, marital status, re74, re75) has arrows pointing into both <em>treat</em> and <em>re78</em>. Which of the following are valid reasons why including re74 and re75 in Z is especially important? (Select all that apply.)",
+    q: "In the LaLonde DAG on this module, each of the 8 pre-treatment covariates (age, educ, race, marital status, re74, re75) has arrows pointing into both <em>treat</em> and <em>re78</em>. Which of the following are valid reasons why including re74 and re75 in Z is especially important? (Select <strong>all</strong> that apply.)",
     choices: [
       "re74 and re75 carry the largest share of residual confounding in the NSW vs. CPS comparison.",
       "Prior earnings are direct causes of 1978 earnings, so they explain most of the outcome variance.",

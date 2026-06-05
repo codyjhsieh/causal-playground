@@ -58,7 +58,7 @@ export function mount(root) {
   // ── Layout ─────────────────────────────────────────────────────────────────
   const { root: layout, stage, panel, caption } = lessonLayout({
     title: "Difference-in-Differences",
-    idea:  "Compare treated vs. control across time. The causal effect is the gap between what actually happened and what 'would have happened' — a counterfactual built on the parallel-trends assumption.",
+    idea:  "Compare the change in a treated group to the change in an untreated control group. The causal effect is the treated group's change minus the control group's change — eliminating shared time trends under the parallel-trends assumption.",
   });
 
   // Canvas
@@ -186,12 +186,12 @@ export function mount(root) {
   );
 
   caption.innerHTML =
-    "The DiD estimator subtracts the control group's trend from the treated group's trend, recovering " +
-    "what the treated group 'would have done' as a <strong>counterfactual baseline</strong>. " +
-    "Card &amp; Krueger found NJ employment <em>rose</em> relative to PA after the minimum-wage hike (+2.76 FTE), " +
-    "contradicting the standard competitive-labor-market prediction. " +
-    "The identifying assumption — <strong>parallel trends</strong> — is that NJ and PA would have trended identically absent the policy. " +
-    "Drag the slider to feel how the causal estimate is entirely contingent on that single untestable bet.";
+    "The DiD estimator subtracts the control group&rsquo;s trend from the treated group&rsquo;s trend, " +
+    "recovering a <strong>counterfactual baseline</strong> for what NJ &ldquo;would have done&rdquo; absent the policy. " +
+    "Card &amp; Krueger (1994) found NJ fast-food employment <em>rose</em> by +2.76 FTE per store relative to PA " +
+    "after NJ raised its minimum wage from $4.25 to $5.05 in April 1992 — contradicting the standard competitive-labor-market prediction of job losses. " +
+    "The identifying assumption — <strong>parallel trends</strong> — requires that, absent the wage hike, NJ and PA employment would have moved together; this is untestable from post-period data alone. " +
+    "Drag the slider to see how the entire causal estimate depends on that single counterfactual assumption.";
 
   root.appendChild(layout);
 

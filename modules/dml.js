@@ -295,8 +295,8 @@ export function mount(root) {
   );
 
   caption.innerHTML =
-    "<strong>Real data</strong>: 401(k) eligibility & net financial assets from " +
-    "Poterba, Venti & Wise (1994). Income is the primary confounder — higher income predicts " +
+    "<strong>Real data</strong>: 401(k) eligibility &amp; net financial assets from " +
+    "Poterba, Venti &amp; Wise (1994). Income is the primary confounder — higher income predicts " +
     "both 401(k) offering jobs and more savings — and the relationship is strongly nonlinear, " +
     "so linear OLS control is misspecified. " +
     "<strong>Neyman orthogonality</strong>: the DML score ψ(Y,D,θ,η) has zero derivative " +

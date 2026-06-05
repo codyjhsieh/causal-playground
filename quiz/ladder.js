@@ -11,7 +11,7 @@ export const questions = [
     explain: "Observational data only supports association: P(survival | drug). Moving to rung II requires actually setting the drug (e.g., via randomization), which severs the arrow from confounders into treatment. An uncontrolled study never does that, no matter how large it is.",
   },
   {
-    q: "In the LaLonde NSW experiment, comparing NSW trainees against CPS workers (rung I) yields an earnings gap of roughly <b>−$8,000</b>, while the randomized NSW treated vs. NSW control comparison (rung II) yields <b>+$1,794</b>. What explains the sign reversal?",
+    q: "In the LaLonde NSW experiment, comparing NSW trainees against CPS workers (rung I) yields an earnings gap of roughly <strong>−$8,000</strong>, while the randomized NSW treated vs. NSW control comparison (rung II) yields <strong>+$1,794</strong>. What explains the sign reversal?",
     choices: [
       "The CPS sample is too small to be reliable",
       "Selection bias: trainees were severely disadvantaged relative to CPS workers before the program started",
@@ -22,7 +22,7 @@ export const questions = [
     explain: "CPS workers were older, more educated, and already employed — far more advantaged than the targeted NSW population. That pre-treatment disadvantage drives the observational comparison negative even though training genuinely helped. Randomization (rung II) breaks the link between disadvantage and treatment assignment, recovering the true positive effect.",
   },
   {
-    q: "Select <b>all</b> statements that correctly describe rung III (Imagining / Counterfactual).",
+    q: "Select <strong>all</strong> statements that correctly describe rung III (Imagining / Counterfactual).",
     choices: [
       "It answers questions of the form P(Y<sub>x</sub> | X=x′, Y=y′) — what Y would have been under a different X, for a unit we already observed",
       "A large enough randomized trial can answer rung-III questions for every individual",

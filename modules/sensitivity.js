@@ -198,7 +198,10 @@ export function mount(root) {
   }
 
   const title = "Sensitivity Analysis";
-  const idea = "Every observational estimate must answer: how strong would an unobserved confounder need to be to overturn my result? The Cinelli-Hazlett contour plot gives the full picture — dial in a hypothetical confounder and watch the adjusted estimate update live.";
+  const idea = "Every observational estimate assumes no unmeasured confounding — sensitivity analysis asks how strong a hidden confounder would need to be to overturn the result. " +
+    "The Cinelli–Hazlett (2020) omitted-variable-bias contour plot gives the full picture: " +
+    "dial in a hypothetical confounder's partial R² with treatment and outcome, and watch the adjusted estimate update live. " +
+    "The LaLonde data are uniquely powerful here because the RCT benchmark (+$1,794) is known.";
 
   const { root: layout, stage, panel, caption } = lessonLayout({ title, idea });
   root.appendChild(layout);
@@ -276,13 +279,17 @@ export function mount(root) {
 
   caption.innerHTML =
     "<strong>Omitted-variable bias (OVB) contours</strong> — Cinelli &amp; Hazlett (2020). " +
-    "An unobserved confounder Z shifts the estimate by ±√(r²<sub>DZ</sub>·r²<sub>YZ</sub>)·(σ<sub>Y|X</sub>/σ<sub>D|X</sub>). " +
-    "Contour lines show where that adjusted estimate lands; the red <em>killer curve</em> is where it hits zero. " +
-    "Observed covariates (grey dots) reveal how strong real confounders are — if the killer curve demands a confounder " +
-    "far stronger than any measured variable, the result is robust. " +
-    "<strong>Robustness value</strong> (RV): the single r² needed on both axes to nullify the result. " +
-    "<strong>E-value</strong> — VanderWeele &amp; Ding (2017): minimum risk-ratio of a confounder with both treatment and outcome needed to explain away the effect. " +
-    "Rosenbaum bounds give the analogous Γ for rank-based tests. " +
+    "An unobserved confounder Z shifts the estimate by ±√(r²<sub>DZ</sub>·r²<sub>YZ</sub>)·(σ<sub>Y|X</sub>/σ<sub>D|X</sub>), " +
+    "where r²<sub>DZ</sub> and r²<sub>YZ</sub> are the confounder's partial R² with treatment and outcome " +
+    "after removing all observed covariates. " +
+    "Contour lines show where that adjusted estimate lands; the red <em>killer curve</em> is where it reaches zero. " +
+    "Observed covariates (grey dots) benchmark realistic confounding strength — " +
+    "if the killer curve requires a confounder far stronger than any measured variable, the result is robust. " +
+    "<strong>Robustness value</strong> (RV): the single r² threshold needed on both axes to nullify the result. " +
+    "<strong>E-value</strong> — VanderWeele &amp; Ding (2017): the minimum risk ratio a confounder must have " +
+    "with both treatment and outcome to fully explain away the observed association. " +
+    "Rosenbaum bounds — Rosenbaum (2002) — give the analogous sensitivity parameter Γ for rank-based tests. " +
+    "LaLonde (1986) RCT benchmark: +$1,794. " +
     "<em>A result you cannot break with a plausible confounder is a robust result.</em>";
 
   // ---- Contour computation ---

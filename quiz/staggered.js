@@ -33,7 +33,7 @@ export const questions = [
     ],
     answer: 1,
     explain:
-      "Callaway & Sant'Anna (2021) define cohort-specific ATT(g,t) as the DiD for cohort g at time t relative to a baseline just before adoption, using only not-yet-treated or never-treated units as controls. This eliminates the forbidden comparison by construction. The aggregate clean ATT is then a (possibly weighted) average of these cohort–time cells. Choices A and C describe different adjustments; Choice D is closer to TWFE itself.",
+      "Callaway &amp; Sant'Anna (2021) define group-time ATT(g,t) for cohort g at post-adoption year t, using only not-yet-treated or never-treated units as the control pool. This eliminates forbidden comparisons by construction. The aggregate clean ATT is a (possibly weighted) average over all cohort–time cells. Choices A and C describe different adjustments; Choice D describes TWFE itself.",
   },
   {
     q: "In the castle-doctrine application, the naive TWFE estimate and the clean Callaway–Sant'Anna ATT differ in magnitude and may even differ in sign. A student says: 'They just differ because of sampling error.' What is the more precise explanation for a systematic difference?",
@@ -45,7 +45,7 @@ export const questions = [
     ],
     answer: 1,
     explain:
-      "Goodman-Bacon (2021) and de Chaisemartin & D'Haultfœuille (2020) formally show that TWFE applies negative weights to some comparison cells — the forbidden comparisons with already-treated controls can flip sign relative to the true treatment effect. This is a systematic bias from the estimator's construction, not sampling noise. If the treatment effect is heterogeneous across cohorts (which is likely for policy adoption), TWFE can yield a misleading average or even reverse the direction of the effect.",
+      "Goodman-Bacon (2021) and de Chaisemartin &amp; D'Haultfœuille (2020) formally show that TWFE applies negative implicit weights to some cohort–time cells — the forbidden comparisons with already-treated controls can flip sign relative to the true treatment effect. This is a systematic bias from the estimator's construction, not sampling noise. When treatment effects are heterogeneous across cohorts — which is typical for staggered policy adoption — TWFE can yield a misleading average or even reverse the direction of the effect.",
   },
   {
     q: "In the module's event-study view, each cohort line is plotted relative to the year before adoption (k = −1). Pre-treatment coefficients (k = −5 to −2) should be near zero under a valid DiD design. What would a large, non-zero pre-trend for a specific cohort indicate?",

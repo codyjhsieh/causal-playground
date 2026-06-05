@@ -318,7 +318,7 @@ export function mount(root) {
     ]),
     panelSection("Challenge", chal),
     panelSection("", [
-      note("S-learner: one model μ(x,t); τ̂ = μ(x,1)−μ(x,0). T-learner: separate μ₀, μ₁; τ̂ = μ₁−μ₀. X-learner: T-learner → impute pseudo-effects → propensity-weighted blend (Künzel et al.)."),
+      note("S-learner: one model μ(x,t); τ̂ = μ(x,1)−μ(x,0). T-learner: separate μ₀, μ₁; τ̂ = μ₁−μ₀. X-learner: T-learner → impute pseudo-effects → propensity-weighted blend (Künzel et al. 2019)."),
     ]),
   );
 
@@ -332,8 +332,8 @@ export function mount(root) {
     "(4) blend with propensity weights e(x): τ̂_X = e·τ̂₀ + (1−e)·τ̂₁. " +
     "Efficient when arm sizes are unequal (IHDP: ~90% control). " +
     "PEHE = √mean((τ̂ − (μ₁−μ₀))²) scores against the NPCI ground truth. " +
-    "True ATE ≈ 4.0. &nbsp;— " +
-    "<em>Künzel, Sekhon, Bickel &amp; Yu 2019; Nie &amp; Wager 2021 (R-learner); Kennedy 2020 (DR-learner).</em>";
+    "True ATE ≈ 4.0. " +
+    "<em>Künzel, Sekhon, Bickel &amp; Yu (2019); Nie &amp; Wager (2021) (R-learner); Kennedy (2020) (DR-learner).</em>";
 
   // ── springs for animated PEHE bars ───────────────────────────────────────
   const sPS = new Spring(0, { stiffness: 30, damping: 10 });

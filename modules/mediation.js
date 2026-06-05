@@ -432,8 +432,11 @@ export function mount(root) {
     "NIE = <em>a</em>·<em>b</em>, NDE = <em>c′</em>, TE ≈ NDE + NIE. " +
     "Key assumption: <strong>no unmeasured mediator–outcome confounders</strong> — " +
     "even in an RCT, this is an untestable structural assumption for the M→Y path. " +
-    "Data: JOBS II (Vinokur, Price &amp; Schul 1995) — a randomized job-search intervention. " +
-    "<em>Baron &amp; Kenny 1986; Imai, Keele &amp; Tingley 2010; VanderWeele 2015.</em>";
+    "Data: JOBS II (Vinokur, Price &amp; Schul 1995) — a randomized job-search intervention " +
+    "where the workshop lowers depression (TE &lt; 0); a &gt; 0 (workshop raises self-efficacy) " +
+    "and b &lt; 0 (self-efficacy lowers depression), so NIE = a·b &lt; 0 (depression-reducing). " +
+    "Approximately 37% of the total depression reduction is mediated through self-efficacy (NIE / TE). " +
+    "<em>Baron &amp; Kenny (1986); Imai, Keele &amp; Tingley (2010); VanderWeele (2015).</em>";
 
   // Initialise targets
   setTargets(currentEst);

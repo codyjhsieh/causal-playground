@@ -1,6 +1,6 @@
 export const questions = [
   {
-    q: "In the 401(k) module, IRA ownership and 401k eligibility are positively correlated in the raw data (r ≈ 0.3), yet there is <b>no arrow</b> between them in the causal graph. What produces this correlation?",
+    q: "In the 401(k) module, IRA ownership and 401k eligibility are positively correlated in the raw data (r ≈ 0.3), yet there is <strong>no arrow</strong> between them in the causal graph. What produces this correlation?",
     choices: [
       "IRA ownership causes people to seek out 401k plans at their workplace",
       "401k eligibility encourages households to open an IRA as a supplement",
@@ -11,7 +11,7 @@ export const questions = [
     explain: "This is a classic fork / common-cause structure: Income → IRA ownership and Income → 401k eligibility. The two variables share a cause but neither causes the other. The backdoor path IRA ← Income → 401k carries association without causation. Once you hold income fixed, the within-income correlation collapses to ≈ 0.",
   },
   {
-    q: "The causal graph for the 401(k) confounding example is a <b>fork</b>: Income → IRA and Income → 401k. Which operation blocks the backdoor path <code>IRA ← Income → 401k</code>?",
+    q: "The causal graph for the 401(k) confounding example is a <strong>fork</strong>: Income → IRA and Income → 401k. Which operation blocks the backdoor path <code>IRA ← Income → 401k</code>?",
     choices: [
       "Conditioning on IRA ownership itself",
       "Conditioning on 401k eligibility",
@@ -22,7 +22,7 @@ export const questions = [
     explain: "In a fork X ← Z → Y, the path is open by default and is blocked only by conditioning on the fork node Z (Income). Conditioning on X or Y does not close it. The path is open without conditioning even though there is no direct X → Y arrow — that is precisely what makes confounding insidious.",
   },
   {
-    q: "Select <b>all</b> statements that correctly characterize a confounder.",
+    q: "Select <strong>all</strong> statements that correctly characterize a confounder.",
     choices: [
       "A confounder must cause both the treatment and the outcome",
       "A confounder creates a non-causal association between treatment and outcome",
@@ -41,7 +41,7 @@ export const questions = [
       "The direction of causation is reversed: 401k eligibility causes IRA ownership",
     ],
     answer: 1,
-    explain: "The Poterba–Venti–Wise 401(k) dataset has ≈9,913 complete cases — a large sample — yet the confounded r ≈ 0.3 does not reflect any causal effect. Association is not causation regardless of n. A regression would suffer the same confounding unless income is controlled. The causal graph has no arrow between IRA and 401k in either direction.",
+    explain: "The Poterba–Venti–Wise 401(k) dataset has ≈9,275 complete cases — a large sample — yet the confounded r ≈ 0.3 does not reflect any causal effect. Association is not causation regardless of n. A regression would suffer the same confounding unless income is controlled. The causal graph has no arrow between IRA and 401k in either direction.",
   },
   {
     q: "In the module, the panel slider lets you vary the number of income bins from 5 to 20. Across all granularities, the within-income correlation stays ≈ 0. What does this robustness demonstrate?",

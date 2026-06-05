@@ -234,10 +234,13 @@ export function mount(root) {
     "RCT violates SUTVA: villagers share information, so having more intensively-treated " +
     "<em>neighbors</em> raises an untreated person's take-up. " +
     "Fix: <strong>exposure mapping</strong> (Hudgens &amp; Halloran 2008; Aronow &amp; Samii 2017) — " +
-    "model <em>takeup ~ own_treatment + peer_saturation + covariates</em>; the peer coefficient is " +
-    "the spillover effect. Ignoring it understates the program's value by conflating the " +
-    "spillover-inflated control group with the true counterfactual. " +
-    "<em>Cai, de Janvry &amp; Sadoulet 2015; Hudgens &amp; Halloran 2008 (interference); Aronow &amp; Samii 2017.</em>";
+    "model <em>takeup ~ own_treatment + peer_saturation + covariates</em>; " +
+    "the direct effect (own intensive session) and the spillover effect (peer saturation) are both " +
+    "positive — the intensive session raises own take-up directly, and it also raises neighbors' " +
+    "take-up through information sharing. " +
+    "Ignoring spillovers understates the program's value: control households already benefit " +
+    "from peers' information, compressing the naive treated-minus-control gap below the true total benefit. " +
+    "<em>Cai, de Janvry &amp; Sadoulet (2015); Hudgens &amp; Halloran (2008) (interference); Aronow &amp; Samii (2017).</em>";
 
   root.appendChild(layout);
 

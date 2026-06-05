@@ -128,9 +128,11 @@ let results = computeEstimates(true, true);
 export function mount(root) {
   const title = "Doubly-Robust Estimation (AIPW)";
   const idea =
-    "Combine an outcome model μ̂(x) and a propensity model ê(x). " +
-    "Break either one alone — AIPW stays on target. " +
-    "Break both — and it finally fails. That is double robustness.";
+    "IPW requires a correct propensity model; outcome regression requires a correct outcome model. " +
+    "AIPW (Augmented IPW) combines both: break either one alone and AIPW stays consistent — " +
+    "that is double robustness (Robins, Rotnitzky & Zhao 1994). " +
+    "Break both and it finally fails. " +
+    "The efficient influence function (EIF) score achieves the semiparametric efficiency bound.";
 
   const { root: layout, stage, panel, caption } = lessonLayout({ title, idea });
   root.appendChild(layout);
@@ -325,17 +327,19 @@ export function mount(root) {
   );
 
   caption.innerHTML =
-    "<strong>Doubly-Robust / AIPW formula:</strong> " +
-    "ψᵢ = (μ̂₁(xᵢ)−μ̂₀(xᵢ)) + Tᵢ/ê(xᵢ)·(Yᵢ−μ̂₁(xᵢ)) − (1−Tᵢ)/(1−ê(xᵢ))·(Yᵢ−μ̂₀(xᵢ)); " +
-    "ATE = mean(ψ); SE = sd(ψ)/√n. " +
-    "The score ψ is the <em>efficient influence function (EIF)</em>: if either model is correct, " +
-    "the augmentation term has mean zero, so ATE_AIPW is consistent regardless of which nuisance is wrong. " +
-    "It also achieves the semiparametric efficiency bound — the smallest possible variance. " +
-    "Misspecify <em>both</em> and the mean-zero property fails; double robustness is lost. " +
-    "<strong>Data:</strong> IHDP (Hill 2011) — real covariates x₁–x₆, simulated potential outcomes, " +
-    "true ATE = mean(μ₁−μ₀) ≈ 4.0 (gold benchmark). Outcome model: OLS per arm (correct) or arm-mean (wrong). " +
+    "Where IPW requires a correct propensity model and outcome regression requires a correct outcome model, " +
+    "<strong>AIPW</strong> (Augmented IPW) requires only one of the two — <em>double robustness</em>. " +
+    "The <strong>efficient influence function (EIF)</strong> score " +
+    "ψᵢ = (μ̂₁(xᵢ)−μ̂₀(xᵢ)) + Tᵢ/ê(xᵢ)·(Yᵢ−μ̂₁(xᵢ)) − (1−Tᵢ)/(1−ê(xᵢ))·(Yᵢ−μ̂₀(xᵢ)) " +
+    "has mean zero whenever either nuisance model is correct, so ATE = mean(ψ) is consistent. " +
+    "It also achieves the semiparametric efficiency bound — the smallest possible asymptotic variance — " +
+    "giving SE = sd(ψ)/√n. " +
+    "Misspecify <em>both</em> models and the mean-zero property fails; double robustness is lost. " +
+    "<strong>Data:</strong> IHDP (Hill 2011) — real covariates x₁–x₆, simulated potential outcomes; " +
+    "true ATE = mean(μ₁−μ₀) ≈ 4.0 (known gold benchmark). " +
+    "Outcome model: OLS per arm (correct) or arm-mean only (wrong). " +
     "Propensity: logistic regression on x₁–x₆ (correct) or intercept-only (wrong, constant ê). " +
-    "— Robins &amp; Rotnitzky 1994; Bang &amp; Robins 2005; Chernozhukov et al. 2018.";
+    "References: Robins, Rotnitzky &amp; Zhao (1994); Bang &amp; Robins (2005); Chernozhukov et al. (2018).";
 
   // ── drawing ─────────────────────────────────────────────────────────────────
 

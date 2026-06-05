@@ -73,7 +73,7 @@ export function mount(root) {
 
   const { root: layout, stage, panel, caption } = lessonLayout({
     title: "The Front-Door Criterion",
-    idea: "Even when the confounder is UNOBSERVED, causal effects are identifiable — if a measured mediator fully relays the treatment's effect and its own backdoors are blocked. Adjust ONLY through the mediator pathway.",
+    idea: "Where the backdoor criterion requires the confounder to be observed, the front-door criterion does not — causal effects are identifiable through a fully-mediating, measured mediator even when the confounder is hidden. Two OLS stages compose the effect: β₁ (X→M) times β₂ (M→Y|X).",
   });
   root.appendChild(layout);
 
@@ -221,18 +221,19 @@ export function mount(root) {
   );
 
   caption.innerHTML =
-    "<strong>Front-door formula (Pearl 1995, 2009):</strong> " +
-    "P(Y | do(X)) = Σ<sub>m</sub> P(m | x) · Σ<sub>x′</sub> E[Y | m, x′] P(x′). " +
-    "For the near-linear 401(k) data the two-stage OLS estimator gives " +
-    "β̂<sub>FD</sub> = β̂₁ × β̂₂, where β̂₁ = E[M|X=1]−E[M|X=0] and β̂₂ is the " +
-    "coefficient on M in Y ~ M + X. " +
-    "Three <em>front-door conditions</em> must hold: (1) M fully mediates X→Y; " +
+    "Where the <strong>backdoor criterion</strong> requires the confounder U to be observed, " +
+    "the <strong>front-door criterion</strong> (Pearl 1995) does not — it identifies " +
+    "P(Y | do(X)) = Σ<sub>m</sub> P(m | x) · Σ<sub>x′</sub> E[Y | m, x′] P(x′) " +
+    "entirely through a measured mediator M. " +
+    "Three conditions must hold: (1) M fully mediates X→Y (no direct X→Y path); " +
     "(2) no unblocked backdoor X→M; (3) all backdoors M→Y are blocked by X. " +
-    "When these hold, income (U) — even if unobserved — cannot bias the estimate. " +
-    "The front-door effect ≈ the income-adjusted backdoor reference, confirming identification. " +
-    "Data: Poterba, Venti &amp; Wise (1994); method: Pearl, " +
-    "<em>Causal Diagrams for Empirical Research</em>, Biometrika 1995; " +
-    "<em>Causality</em>, Cambridge UP 2009, §3.4.";
+    "For the near-linear 401(k) chain — eligibility → participation → net assets — " +
+    "the two-stage OLS estimator β̂<sub>FD</sub> = β̂₁ × β̂₂ yields ≈ +$9–11k, " +
+    "matching the income-adjusted backdoor reference and confirming identification " +
+    "without ever conditioning on income (U). " +
+    "Data: Poterba, Venti &amp; Wise (1994); " +
+    "method: Pearl, <em>Causal Diagrams for Empirical Research</em>, " +
+    "<em>Biometrika</em> 82(4), 1995; <em>Causality</em>, Cambridge UP 2009, §3.4.";
 
   // ---- Springs for bar animation ------------------------------------------
   const spB1    = new Spring(0, { stiffness: 40, damping: 11 });

@@ -311,7 +311,7 @@ export function mount(root) {
     "The oracle policy π★(x) = 1{μ₁−μ₀ > c} is the best achievable and sets the ceiling; regret = V(π★)−V(π̂) measures the welfare gap. " +
     "Estimating CATE by T-learner (two separate outcome MLPs) or S-learner (one MLP with T as feature) and thresholding at c gives a learned policy — " +
     "even an imperfect CATE estimate can support a near-oracle policy once the cost threshold is tuned. " +
-    "<em>Athey &amp; Wager 2021 (policy learning); Manski 2004; Kitagawa &amp; Tetenov 2018.</em>";
+    "<em>Athey &amp; Wager (2021) (policy learning); Manski (2004); Kitagawa &amp; Tetenov (2018).</em>";
 
   // ── draw scatter ────────────────────────────────────────────────────────────
   // The scatter x-axis = x1 (birth-weight z-score), y-axis = estimated CATE τ̂(x).

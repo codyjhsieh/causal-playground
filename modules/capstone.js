@@ -277,7 +277,7 @@ const METHODS = ["RCT / Adjust", "IV", "RDD", "DiD", "Synth. Control"];
 const CASES = [
   {
     title: "Does job training raise earnings?",
-    detail: "You have the NSW randomized experiment AND a CPS survey comparison group. The CPS controls are much richer — naively comparing gives ≈ −$8 000.",
+    detail: "You have the NSW randomized experiment AND a CPS survey comparison group. The CPS comparison is naively much larger — but ignoring selection gives a large negative bias (≈ −$8 000 to −$15 000) relative to the true RCT estimate of ≈ +$1 794.",
     dataset: "NSW (LaLonde 1986) + CPS comparison group",
     correct: 0, // RCT / Adjust
     dagIdx: 0,
@@ -294,7 +294,7 @@ const CASES = [
   },
   {
     title: "What is the return to an extra year of schooling?",
-    detail: "OLS of log-wage on schooling is biased upward by unobserved ability. Ability raises both schooling and wages — an unmeasured confounder.",
+    detail: "OLS of log-wage on schooling is confounded by unobserved ability — ability raises both schooling and wages. Card (1995) finds that IV via college proximity yields a larger estimate than OLS, consistent with ability bias partially offsetting measurement error in the OLS.",
     dataset: "Card (1995), NLSYM n ≈ 3010",
     correct: 1, // IV
     dagIdx: 1,
@@ -345,7 +345,7 @@ const CASES = [
   },
   {
     title: "Did California's Prop 99 cut smoking? One treated state, 38 donors.",
-    detail: "California passed Prop 99 (tobacco tax + restrictions) in 1988. No other state did. You have annual per-capita cigarette sales for California and 38 control states, 1970–2000.",
+    detail: "California enacted Proposition 99 (tobacco tax and advertising restrictions) in November 1988, effective 1989. No other state enacted a comparable measure. You have annual per-capita cigarette sales for California and 38 donor states, 1970–2000.",
     dataset: "Abadie, Diamond & Hainmueller (2010), CDC/Orzechowski-Walker",
     correct: 4, // Synthetic Control
     dagIdx: 4,
@@ -383,7 +383,7 @@ export function mount(root) {
   // ── Layout ─────────────────────────────────────────────────────────────────
   const { root: layout, stage, panel, caption } = lessonLayout({
     title: "Method Selection",
-    idea: "Identification is a modeling choice, not a default. Match the strategy to the assumptions you can defend.",
+    idea: "Identification is a modeling choice, not a default. Five real problems — NSW job-training (RCT), Card returns to schooling (IV), Lee incumbency (RDD), Card-Krueger minimum wage (difference-in-differences), Prop 99 smoking (synthetic control) — each requires a different strategy. Match the method to the assumption its causal structure can support.",
   });
 
   // ── Score readout + progress pips (panel) ───────────────────────────────────
@@ -426,13 +426,16 @@ export function mount(root) {
 
   // ── Caption ────────────────────────────────────────────────────────────────
   caption.innerHTML =
-    "<em>Identification is a modeling choice, not a default. Match the strategy to the assumptions you can defend.</em> " +
-    "Each case card presents a real research question grounded in data already explored in this platform. " +
-    "The right method is the one whose core assumption is <strong>plausible given the causal structure</strong>. " +
-    "Wrong answers explain exactly why they fail for this particular problem. " +
-    "<strong>Refs:</strong> Hernán &amp; Robins, <em>Causal Inference: What If</em> (target trial framework); " +
-    "Angrist &amp; Pischke, <em>Mostly Harmless Econometrics</em>; " +
-    "LaLonde (1986); Card (1995); Lee (2008); Card &amp; Krueger (1994); Abadie, Diamond &amp; Hainmueller (2010).";
+    "Each case presents a real research question from data explored throughout this platform. " +
+    "The right identification strategy is the one whose core assumption is <strong>plausible given the causal structure</strong>: " +
+    "randomization (NSW, LaLonde 1986, ≈ +$1,794 training effect); " +
+    "exclusion restriction (Card 1995 IV, ≈ 0.13 log pts/yr); " +
+    "continuity at a cutoff (Lee 2008 RDD incumbency advantage); " +
+    "parallel trends (Card &amp; Krueger 1994 DiD, ≈ +2.76 FTE/store); " +
+    "pre-treatment fit (Abadie, Diamond &amp; Hainmueller 2010 synthetic control, Prop 99 ≈ −26 packs/capita). " +
+    "Wrong answers explain exactly why each alternative strategy fails for that particular causal structure. " +
+    "References: LaLonde (1986); Card (1995); Lee (2008); Card &amp; Krueger (1994); Abadie, Diamond &amp; Hainmueller (2010); " +
+    "Angrist &amp; Pischke, <em>Mostly Harmless Econometrics</em>; Hernán &amp; Robins, <em>Causal Inference: What If</em>.";
 
   root.appendChild(layout);
 

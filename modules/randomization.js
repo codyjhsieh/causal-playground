@@ -121,7 +121,7 @@ export function mount(root) {
   // ---- Layout ----
   const { root: layout, stage, panel, caption } = lessonLayout({
     title: "Randomization",
-    idea: "A coin flip is the most powerful instrument in science: it makes treatment independent of everything — measured or not — so a simple difference in means becomes an unbiased causal estimate. Real data from the Thornton (2008) HIV-incentive RCT in Malawi.",
+    idea: "A coin flip makes treatment independent of every pre-treatment trait — measured or unmeasured — so a simple difference in means is an unbiased estimate of the average treatment effect (ATE). Real data from the Thornton (2008) HIV-incentive RCT in Malawi.",
   });
 
   const cvTop = new Canvas(560, 360, { margin: { t: 10, r: 10, b: 10, l: 10 } });
@@ -170,7 +170,7 @@ export function mount(root) {
   );
 
   caption.innerHTML =
-    "Data: <strong>Thornton (2008) HIV Learning, Treatment &amp; Prevention in Malawi</strong> (<em>American Economic Review</em>). " +
+    "Data: <strong>Thornton (2008) — &ldquo;The Demand for, and Impact of, Learning HIV Status&rdquo;</strong> (<em>American Economic Review</em>, 98(5)). " +
     "The randomized treatment (<code>any</code>) is whether a participant was offered <em>any</em> cash incentive to return and learn their HIV result; " +
     "the outcome (<code>got</code>) is whether they actually returned. " +
     "In the <strong>RCT mode</strong>, each run resamples real rows with replacement (bootstrap) and recomputes " +

@@ -3,7 +3,7 @@
 // through the backdoor path pira ← inc → e401k, and when you condition on
 // income the flow stops and the within-income correlation collapses to ≈ 0.
 //
-// Data: Poterba, Venti & Wise 401(k) dataset (n ≈ 9,913 complete cases).
+// Data: Poterba, Venti & Wise 401(k) dataset (n ≈ 9,275 complete cases).
 
 import { h } from "../lib/dom.js";
 import { mean, correlation } from "../lib/stats.js";

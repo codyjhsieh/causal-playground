@@ -282,7 +282,7 @@ export function mount(root) {
   // ── layout ─────────────────────────────────────────────────────────────────
   const { root: layout, stage, panel, caption } = lessonLayout({
     title: "Causal Foundation Models",
-    idea: "Pre-train once on a prior of synthetic causal worlds. Then, on any new dataset, predict the whole treatment-effect curve in a single forward pass — no retraining.",
+    idea: "Pre-train once on a prior of synthetic SCMs, then estimate the full treatment-effect curve on any new dataset in a single forward pass — no per-dataset retraining. The prior is synthetic by design (PFNs implement amortized Bayesian inference); the test set here is the real IHDP benchmark (Hill 2011).",
   });
   root.appendChild(layout);
 
@@ -392,18 +392,19 @@ export function mount(root) {
   );
 
   caption.innerHTML =
-    "Prior-Data Fitted Networks (PFNs) perform <em>amortized Bayesian inference by in-context learning</em>: " +
-    "a model pre-trained on a <strong>synthetic SCM prior</strong> (inherent to the PFN approach — pre-training on simulated causal worlds) " +
-    "estimates treatment effects on a <strong>real benchmark dataset</strong> in a single forward pass — no per-dataset retraining. " +
-    "The <strong>test set is the real IHDP benchmark</strong> (Hill 2011): 747 infants with real covariates x1–x25, " +
-    "semi-synthetic potential outcomes so the true ITE = μ₁−μ₀ is known, enabling exact PEHE scoring. " +
-    "The in-context summary bins the IHDP data (projected via x1, birth-weight z-score) into treated/control outcome means + propensity, " +
-    "fed with a query point to the PFN MLP. The T-learner baseline trains from scratch on the same IHDP data, animating its slow convergence. " +
-    "&mdash; <em>Müller et al., Transformers Can Do Bayesian Inference (PFNs), ICLR 2022</em>; " +
-    "<em>Hollmann et al., TabPFN, Nature 2025</em>; " +
-    "<em>Balazadeh et al., CausalPFN, arXiv:2506.07918, 2025</em>; " +
-    "<em>Ma, Frauen et al., CausalFM, ICLR 2026, arXiv:2506.10914</em>; " +
-    "<em>Hill, Bayesian nonparametric modeling for causal inference (IHDP), J. Comput. Graph. Stat. 2011</em>.";
+    "<strong>Prior-Data Fitted Networks (PFNs)</strong> perform <em>amortized Bayesian inference by in-context learning</em>: " +
+    "a model pre-trained on a <strong>synthetic SCM prior</strong> — inherent to the PFN approach " +
+    "(Müller et al., <em>Transformers Can Do Bayesian Inference</em>, ICLR 2022; " +
+    "Hollmann et al., <em>TabPFN</em>, <em>Nature</em> 2025) — " +
+    "estimates treatment effects on any new dataset in a single forward pass with no per-dataset retraining. " +
+    "The <strong>test set is the real IHDP benchmark</strong> (Hill, <em>J. Comput. Graph. Stat.</em> 2011): " +
+    "747 infants with 25 real covariates, semi-synthetic potential outcomes so the true ITE = μ₁ − μ₀ is known, " +
+    "enabling exact PEHE (Precision in Estimation of Heterogeneous Effects) scoring. " +
+    "The in-context summary bins the IHDP data (projected via x₁, birth-weight z-score) " +
+    "into treated/control outcome means and propensity, which is fed with a query point to the PFN MLP. " +
+    "The T-learner baseline trains two outcome networks from scratch on the same IHDP data, illustrating the cost of per-dataset training. " +
+    "Recent causal extensions: Balazadeh et al. (<em>CausalPFN</em>, arXiv 2506.07918, 2025); " +
+    "Ma, Frauen et al. (<em>CausalFM</em>, ICLR 2026, arXiv 2506.10914).";
 
   // ── Springs ────────────────────────────────────────────────────────────────
   const pfnPEHEsp  = new Spring(1, { stiffness: 30, damping: 10 });

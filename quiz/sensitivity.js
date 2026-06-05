@@ -19,7 +19,7 @@ export const questions = [
       "The σ<sub>Y|X</sub>/σ<sub>D|X</sub> ratio rescales the bias to the coefficient's natural units, reflecting how variable the outcome is relative to the treatment residual."
     ],
     answer: [0, 1, 3],
-    explain: "A and B are correct by definition in Cinelli & Hazlett (2020): both R² values are partial — they measure the additional variance explained by Z after all observed covariates have been accounted for. D is also correct: the ratio σ_Y|X / σ_D|X puts the bias on the same scale as the treatment coefficient. C is wrong — using marginal R² ignores the confounding already absorbed by observed covariates and would overstate the required confounder strength."
+    explain: "A and B are correct by definition in Cinelli &amp; Hazlett (2020): both R² values are partial — they measure the additional variance explained by Z after all observed covariates have been partialled out. D is also correct: the ratio σ<sub>Y|X</sub>/σ<sub>D|X</sub> rescales the bias to the same units as the treatment coefficient. C is wrong — using marginal R² ignores the confounding already absorbed by observed covariates and would overstate the strength required to explain away the result."
   },
   {
     q: "The Robustness Value (RV) for the LaLonde observational estimate is displayed in the module. Which statement correctly interprets RV?",

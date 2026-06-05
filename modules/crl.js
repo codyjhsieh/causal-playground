@@ -231,7 +231,7 @@ export function mount(root) {
   // ── layout ──────────────────────────────────────────────────────────────
   const { root: layout, stage, panel, caption } = lessonLayout({
     title: "Causal Representation Learning",
-    idea: "Real protein signals (PKA, P38) are the hidden latent causes z. Observations x = A·z are an entangled linear mix. Without interventions, you cannot tell which direction is PKA and which is P38 — a free rotation. Each intervention pins one axis.",
+    idea: "Real protein signals (PKA, P38) are the hidden latent causes z. Observations x = A·z are an entangled mix — the learner sees only x. From observational Gaussian data alone, any rotation of the recovered basis is equally valid (Locatello et al. 2019): the latents are unidentifiable up to a free rotation. Each intervention do(z_i) pins one column of A, and two interventions fully identify the mixing.",
   });
 
   // ── three side-by-side canvas panels ────────────────────────────────────
@@ -320,20 +320,18 @@ export function mount(root) {
 
   caption.innerHTML =
     "The latent factors are <strong>real phosphoprotein measurements</strong> from " +
-    "<em>Sachs et al., Science 2005</em> (single-cell flow-cytometry, ~853 cells): " +
-    "z-scored PKA and P38 serve as the ground-truth latent causes. A known invertible " +
-    "mixing matrix A(θ) entangles them into observations x = A·z — the learner only sees x. " +
-    "Without inductive bias, <strong>unsupervised disentanglement is impossible</strong>: " +
-    "infinitely many linear unmixings reproduce the same Gaussian observation distribution — " +
-    "the latent axes are unidentifiable up to a free rotation (Locatello et al., " +
-    "<em>Challenging Common Assumptions in the Unsupervised Learning of Disentangled " +
-    "Representations</em>, ICML 2019; Hyvärinen &amp; Pajunen 1999). A single " +
-    "<strong>intervention</strong> do(z<sub>i</sub>) shifts the observation mean by " +
-    "A[:,i]·shift, revealing that column of the mixing matrix; with interventions on all " +
-    "latents, A is identified up to permutation and sign, and the latent variables are " +
-    "recovered (Schölkopf et al., <em>Toward Causal Representation Learning</em>, " +
-    "Proc. IEEE 2021; Lippe et al., <em>CITRIS / iCITRIS</em>, ICML/NeurIPS 2022; " +
-    "Varici et al., <em>Score-Based Causal Representation Learning</em>, JMLR 2025).";
+    "Sachs et al. (<em>Science</em> 2005) — single-cell flow-cytometry data (~853 cells): " +
+    "z-scored PKA and P38 serve as the ground-truth latent causes. " +
+    "A known invertible mixing matrix A(θ) entangles them into observations x = A·z; the learner sees only x. " +
+    "Without inductive bias, <strong>unsupervised disentanglement is provably impossible</strong>: " +
+    "any rotation of the recovered basis fits the Gaussian observation distribution equally well, " +
+    "leaving the latent axes unidentifiable from observational data alone " +
+    "(Locatello et al., ICML 2019; Hyvärinen &amp; Pajunen 1999). " +
+    "Each <strong>intervention</strong> do(z<sub>i</sub> := c) shifts the observation mean by A[:,i]·c, " +
+    "revealing that column of the mixing matrix; with one intervention per latent, " +
+    "A is identified up to permutation and sign, and ẑ = A<sup>−1</sup>x recovers the true latents " +
+    "(Schölkopf et al., <em>Toward Causal Representation Learning</em>, Proc. IEEE 2021; " +
+    "Lippe et al., <em>CITRIS</em>, ICML 2022).";
 
   root.appendChild(layout);
 

@@ -108,7 +108,7 @@ export function mount(root) {
   );
 
   caption.innerHTML =
-    "<strong>LaLonde 1986; Dehejia & Wahba 1999.</strong> " +
+    "<strong>LaLonde 1986; Dehejia &amp; Wahba 1999.</strong> " +
     "The <em>backdoor criterion</em> says: adjust for a set Z that (1) blocks every " +
     "non-causal (backdoor) path from treatment into outcome and (2) contains no " +
     "descendant of treatment. Here each pre-treatment covariate is a common cause of " +

@@ -67,7 +67,7 @@ function fitSide(bw, side) {
 
 // ─── Main module ─────────────────────────────────────────────────────────────
 const TITLE = "Regression Discontinuity";
-const IDEA  = "Barely losing vs. barely winning a U.S. House election is essentially random luck near the threshold — so the jump at the cutoff measures a real causal effect: the incumbency advantage.";
+const IDEA  = "Near an electoral threshold, whether a candidate just wins or just loses is essentially random luck. The continuity assumption — that potential outcomes are smooth through the cutoff — lets the jump in outcomes at x = 0 identify the causal incumbency advantage (Lee, 2008).";
 
 export function mount(root) {
   injectCSS();
@@ -113,20 +113,20 @@ export function mount(root) {
     panelSection("Challenge", [chal]),
     h("p", { class: "rdd-cite",
       text: "Lee (2008) \"Randomized experiments from non-random selection in U.S. House elections.\" " +
-            "Journal of Econometrics 142(2): 675-697. " +
-            "Barely-winners vs. barely-losers are locally randomized at the cutoff — " +
-            "the discontinuity identifies the LATE (local average treatment effect) of incumbency." }),
+            "Journal of Econometrics, 142(2): 675–697. " +
+            "Barely-winners vs. barely-losers are locally as-good-as-randomized at the cutoff — " +
+            "the jump in the regression function identifies the LATE (local average treatment effect) of incumbency for marginal candidates." }),
   );
 
   caption.innerHTML =
-    "Lee (2008) studies U.S. House elections: the <strong>running variable</strong> is a party's " +
+    "Lee (2008) studies U.S. House elections 1946–2010: the <strong>running variable</strong> is the Democratic party&rsquo;s " +
     "vote margin in the <em>prior</em> election (centred at zero). The <strong>continuity assumption</strong> " +
-    "says potential outcomes are smooth through zero — only incumbency status jumps. " +
-    "Near the threshold, winners and losers differ only by electoral luck, so the gap in their " +
-    "<em>next</em>-election vote share is the causal <strong>incumbency advantage</strong>. " +
-    "Shrinking bandwidth <em>h</em> enforces locality (less bias from curvature) at the cost of " +
-    "smaller <em>n</em> (more variance): the canonical <strong>bias–variance tradeoff</strong> of RDD. " +
-    "The faint dashed lines show full-sample fits as a reference.";
+    "requires that potential outcomes are smooth through zero — only incumbency status jumps discontinuously at the cutoff. " +
+    "Near the threshold, barely-winners and barely-losers differ only by electoral luck, so the gap in their " +
+    "<em>next</em>-election vote share identifies the causal <strong>incumbency advantage</strong> (a LATE for marginal candidates). " +
+    "Shrinking bandwidth <em>h</em> brings in only units close to the cutoff (less approximation bias) at the cost of " +
+    "fewer observations (higher variance) — the canonical <strong>bias–variance tradeoff</strong> of local linear RDD. " +
+    "The faint dashed lines show full-sample linear fits as a reference.";
 
   root.appendChild(layout);
 

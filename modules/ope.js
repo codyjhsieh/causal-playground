@@ -214,7 +214,7 @@ export function mount(root) {
   // ─── Layout ───────────────────────────────────────────────────────────────
   const { root: layout, stage, panel, caption } = lessonLayout({
     title: "Off-Policy Evaluation",
-    idea: "Can you trust a dataset collected by someone else's policy to evaluate yours? Only if they never acted on something you can't see.",
+    idea: "Can you trust a dataset collected by another policy to evaluate yours? Only if the logger never acted on something you cannot observe. Hidden confounders corrupt the recorded propensity, biasing IS, WIS, and DR estimators regardless of sample size — more data only concentrates the estimate around the wrong value.",
   });
 
   // Stage: two columns
@@ -302,15 +302,16 @@ export function mount(root) {
   );
 
   caption.innerHTML =
-    "<strong>Real data:</strong> Thornton (AER 2008) randomized cash incentives to learn HIV status in Malawi. " +
-    "Here <em>any</em> (cash incentive offered, randomized) is the logged action and <em>got</em> (learned HIV result) is the reward. " +
-    "Because assignment was truly random, the behavior propensity π<sub>b</sub>(a=1) ≈ " + PI_B_1.toFixed(2) + " is correctly specified, " +
-    "so IS and DR are <strong>unbiased</strong> at confounding = 0 (histograms sit on the gold line). " +
+    "<strong>Real logged data:</strong> Thornton (AER 2008) randomized cash incentives for learning HIV status in Malawi. " +
+    "The logged action <em>any</em> (incentive offered, randomly assigned) and reward <em>got</em> (learned HIV result) " +
+    "come from a genuine RCT, so the behavior propensity π<sub>b</sub>(a=1) ≈ " + PI_B_1.toFixed(2) + " is <em>correctly specified</em> — " +
+    "IS and DR are therefore <strong>unbiased</strong> at confounding = 0 (bootstrap distributions sit on the gold truth line). " +
     "The <strong>hidden confounding slider</strong> synthetically subsamples the log — preferentially dropping " +
-    "far-distance treated units — so the propensity we record is <em>wrong</em>. " +
-    "Every estimator then inherits a bias that <strong>cannot be removed</strong> by cleverer reweighting. " +
-    "Sensitivity bounds (Kallus &amp; Zhou 2018; Namkoong et al. 2020) are the honest answer: " +
-    "they trade point estimates for intervals under worst-case Γ.";
+    "far-distance treated units — making the recorded propensity <em>wrong</em>. " +
+    "Every estimator then inherits a persistent bias that <strong>cannot be removed</strong> by cleverer reweighting, " +
+    "because the misspecification is systematic, not statistical noise that shrinks with sample size. " +
+    "Sensitivity bounds (Kallus &amp; Zhou 2018; Namkoong et al. 2020) are the principled remedy: " +
+    "they trade point estimates for worst-case intervals over a Γ-uncertainty set.";
 
   root.appendChild(layout);
   refresh();

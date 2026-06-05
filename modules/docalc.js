@@ -106,7 +106,7 @@ const GRAPHS = [
     label: "Bow arc",
     identifiable: false,
     formula: null,
-    whyNot: "U creates a <em>bidirected arc</em> X↔Y. Every path X→Y is also opened by U; no set of observed variables can block it. The hedge criterion (Shpitser &amp; Pearl 2006) confirms: no ID formula exists.",
+    whyNot: "U creates a <em>bidirected arc</em> X↔Y (a latent common cause confounding both endpoints). No set of observed variables can block the open backdoor, and no do-calculus rule applies — P(Y | do(X)) cannot be expressed in terms of observational data alone, regardless of sample size. The <em>hedge</em> criterion (Tian &amp; Pearl 2002; Shpitser &amp; Pearl 2006) confirms non-identifiability.",
     verdictText: "Not identifiable — the hedge (bow arc)",
     dataLabel: null,
     computedEffect: null,
@@ -302,7 +302,7 @@ export function mount(root) {
   // ── Layout ─────────────────────────────────────────────────────────────────
   const { root: layout, stage, panel, caption } = lessonLayout({
     title: "do-Calculus & Identification",
-    idea: "Pick a causal graph. See whether P(Y | do(X)) is identifiable and which of Pearl's three rules license each rewrite. For the 401(k) graphs, the formula is computed from real data.",
+    idea: "The do-calculus (Pearl 1995) gives three rewrite rules that either reduce P(Y | do(X)) to an observable formula or prove no such formula exists. Pick a graph from the gallery: backdoor and front-door are identifiable; the bow arc is NOT — no amount of observational data suffices. For the 401(k) graphs the formula is computed from real data.",
   });
   root.appendChild(layout);
 
@@ -375,7 +375,7 @@ export function mount(root) {
 
   // Challenge
   const chal = challenge({
-    goal: "Find which graphs are identifiable and recover the 401(k) effect for both the backdoor and front-door graphs. Identify the one graph where no amount of data suffices (the bow arc).",
+    goal: "Find which graphs are identifiable and recover the 401(k) effect for both the backdoor and front-door graphs. Identify the bow arc — the graph where no do-calculus rule applies and no amount of observational data can identify the effect.",
   });
   let chalDone = false;
   const solvedSet = new Set();
@@ -595,10 +595,16 @@ export function mount(root) {
     "<em>Rule 1</em> — insert/delete observations W when Y⊥W|X,Z in G<sub>X̄</sub>. " +
     "<em>Rule 2</em> — exchange action do(Z) for observation Z when Y⊥Z|X,W in G<sub>X̄Z̄</sub>. " +
     "<em>Rule 3</em> — insert/delete actions do(Z) when Y⊥Z|X,W in G<sub>X̄Z(W)</sub>. " +
-    "Completeness: every identifiable query has a do-calculus proof (Shpitser &amp; Pearl 2006; Huang &amp; Valtorta 2006). " +
-    "Non-identifiability is witnessed by the <em>hedge</em> — a subgraph where no rule applies. " +
+    "The do-calculus is <em>complete</em>: every identifiable query has a proof via these three rules, " +
+    "and every non-identifiable query is witnessed by the <em>hedge</em> criterion — " +
+    "a subgraph structure for which no rule applies and P(Y | do(X)) cannot be expressed " +
+    "in terms of the observed distribution alone. " +
+    "In the gallery: <strong>backdoor</strong> and <strong>front-door</strong> are identifiable; " +
+    "the <strong>bow arc</strong> (X→Y with a latent U confounding both) is <em>not</em> identifiable — " +
+    "no observational data of any size can separate cause from confounding in that graph. " +
     "Data: Poterba, Venti &amp; Wise (1994) 401(k) subsidy study. " +
-    "References: Pearl 1995 (do-calculus); Tian &amp; Pearl 2002 (c-components); Shpitser &amp; Pearl 2006 (ID algorithm completeness).";
+    "References: Pearl (1995) — do-calculus; Tian &amp; Pearl (2002) — c-components; " +
+    "Shpitser &amp; Pearl (2006) — ID algorithm completeness.";
 
   // ── Initial build ──────────────────────────────────────────────────────────
   rebuild();

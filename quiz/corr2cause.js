@@ -36,7 +36,7 @@ export const questions = [
     q: "The Corr2Cause benchmark (Jin et al., ICLR 2024) found that GPT-4 and other large language models performed near random chance on questions asking which edges are <em>identifiable</em> from correlational data. Which explanation best describes why?",
     choices: [
       "LLMs lack training data on causal graphs, so they must guess randomly.",
-      "LLMs over-confidently orient reversible edges based on plausible causal stories, treating all three MEC-equivalent orientations as distinguishable — confusing domain knowledge with statistical identifiability.",
+      "LLMs over-confidently orient reversible edges based on plausible causal stories, treating MEC-equivalent orientations as distinguishable — confusing domain knowledge with statistical identifiability.",
       "The test prompts were ambiguous, and the random-chance performance would disappear with better phrasing.",
       "Causal-graph reasoning is a purely symbolic task that neural networks cannot represent."
     ],
@@ -44,7 +44,7 @@ export const questions = [
     explain: "The core finding of Corr2Cause is that LLMs conflate causal plausibility with statistical identifiability. A model may 'know' that X plausibly causes Y in a domain and so confidently orient X→Y even when the data cannot distinguish X→Y from Y→X (a reversible edge). This is overconfidence in the MEC sense: the model produces a single DAG where the data only licences a CPDAG. A is wrong — LLMs see vast causal text; lack of data is not the bottleneck. C attributes the result to prompting artifacts, unsupported by systematic tests across phrasings. D overstates the limitation; symbolic graph tasks are well within transformer competence — the specific failure is conceptual conflation, not a representation barrier."
   },
   {
-    q: "In the module, the partial correlation of PKC ⫫ PKA | {Raf} computed from the real Sachs data (n = 853 cells) is displayed as ≈ 0 (green badge). What does this empirical result tell us, and what does it <em>not</em> tell us?",
+    q: "In the module, the partial correlation of PKC ⫫ PKA | {Raf} computed from the real Sachs et al. (2005) protein-signaling data is displayed as ≈ 0 (green badge). What does this empirical result tell us, and what does it <em>not</em> tell us?",
     choices: [
       "It confirms that PKC and PKA are d-separated given Raf in the true causal graph — and it also tells us the direction PKC→Raf vs. PKA→Raf.",
       "It confirms that the model's implied d-separation PKC ⫫ PKA | {Raf} holds in real cell-signaling data, validating the v-structure. It does NOT reveal whether, say, Raf→Mek or Mek→Raf is the correct direction.",

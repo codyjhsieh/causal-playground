@@ -216,7 +216,7 @@ export function mount(root) {
 
   const { root: layout, stage, panel, caption } = lessonLayout({
     title: "Adjustment & Stratification",
-    idea: "Aggregate statistics can mislead when a third variable (department) channels applicants unequally. Conditioning on department — standardization — reveals the true causal effect.",
+    idea: "Aggregate statistics can reverse sign when a third variable (department) both influences which group applies and independently sets admit rates — Simpson's paradox. Conditioning on department via the adjustment formula recovers the direct causal effect.",
   });
 
   // ── Canvas ──────────────────────────────────────────────────────────────────
@@ -337,12 +337,12 @@ export function mount(root) {
 
   // ── Caption ───────────────────────────────────────────────────────────────────
   caption.innerHTML =
-    "The aggregate gap (−14 pp) arises because women applied disproportionately to departments C–F, which had lower admit rates for <em>everyone</em>. " +
-    "Conditioning on department via <strong>standardization</strong> (the adjustment formula) recovers the within-stratum effect: " +
-    "<math>P(admit ∣ do(female)) = Σ<sub>d</sub> P(admit ∣ female, dept=d) · P(dept=d)</math>. " +
-    "Once stratified, the gender gap shrinks to near-zero or slightly favours women in most departments. " +
-    "This is a textbook case of <strong>Simpson's paradox</strong> driven by a departmental confounder. " +
-    "Data: Bickel, Hammel &amp; O'Connell, <em>Science</em> 1975.";
+    "The aggregate gap (≈ −14 pp) arises because women applied disproportionately to departments C–F, which had lower admit rates for <em>everyone</em>. " +
+    "Conditioning on department via <strong>standardization</strong> (the backdoor adjustment formula) recovers the within-stratum effect: " +
+    "<em>P(admit | do(female)) = &Sigma;<sub>d</sub> P(admit | female, dept=d) &middot; P(dept=d)</em>. " +
+    "Once stratified, the gender gap shrinks to near-zero or slightly favours women in most departments — a textbook case of <strong>Simpson&rsquo;s paradox</strong> driven by a departmental confounder. " +
+    "Identifying assumption: <strong>no unmeasured confounders</strong> beyond department (strong ignorability within strata). " +
+    "Data: Bickel, Hammel &amp; O&rsquo;Connell (<em>Science</em>, 1975).";
 
   // ── Stage layout ───────────────────────────────────────────────────────────
   const aggLabels = h("div", { class: "adj-agg-labels" }, [

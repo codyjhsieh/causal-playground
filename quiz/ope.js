@@ -44,14 +44,14 @@ export const questions = [
     explain: "The confounding slider preferentially drops far-distance treated units from the log. The propensity we record (the empirical π_b from the full RCT) is now wrong — the subsampled data look as if treated units are closer on average. This systematic error in the propensity model makes the IS weights incorrect, and that incorrectness is a constant bias, not variance. Doubling n makes the wrong estimate more tightly concentrated around the wrong value. Choice C doesn't help — π_b is still misspecified. Choice D is also false: the DM estimator uses only the logged data, so if the log is a biased sample, the DM outcome model is also biased."
   },
   {
-    q: "In the Thornton (AER 2008) module, the behavior policy π_b assigns cash incentives (any=1) with probability ≈ 0.70, and the target policy π_e is 'always treat' (any=1 for everyone). At hidden confounding = 0, the IS bootstrap distribution is centered on the gold truth line V(π_e) = E[got | any=1]. Which feature of the Thornton study design makes this possible?",
+    q: "In the Thornton (AER 2008) module, the target policy π_e is 'always treat' (any=1 for everyone). At hidden confounding = 0, the IS bootstrap distribution is centered on the gold truth line V(π_e) = E[got | any=1]. Which feature of the Thornton study design makes this possible?",
     choices: [
       "The Thornton study used stratified sampling by distance to the VCT center, so propensities are exactly 0.5 for all subgroups",
-      "Cash incentives were randomly assigned in the RCT, so the recorded propensity π_b(any=1) ≈ 0.70 is the true probability of treatment and there are no hidden confounders in the original log",
+      "Cash incentives were randomly assigned in the RCT, so the recorded behavior propensity π_b(any=1) is the true probability of treatment — the correctly specified propensity and absence of hidden confounders make IS exactly unbiased",
       "The outcome variable 'got' (learned HIV status) is binary, which makes IS weights exactly equal to 1",
       "The target policy and behavior policy are close in KL divergence, keeping importance weights near 1 and variance low"
     ],
     answer: 1,
-    explain: "The Thornton study randomized incentive assignment, so treatment (any=1) is statistically independent of all covariates including distance. The true probability of treatment is known from the randomization design and matches the empirical fraction ≈ 0.70. With a correctly specified π_b and no hidden confounders, IS is exactly unbiased. Choice A is incorrect — propensities are not 0.5 and stratification by distance is not how the study worked. Choice C is wrong — binary outcomes don't make weights equal to 1. Choice D describes a variance property, not unbiasedness."
+    explain: "The Thornton study randomized incentive assignment, so treatment (any=1) is statistically independent of all covariates including distance to the VCT center. The empirical fraction treated in the logged data equals the true randomization probability. With a correctly specified π_b and no hidden confounders in the original log, the IS estimator is exactly unbiased — its bootstrap distribution centers on the gold truth line. Choice A is incorrect — propensities are not 0.5 and the study did not stratify by distance. Choice C is wrong — binary outcomes do not make IS weights equal to 1; the weights depend on the propensity ratio. Choice D describes a variance property, not unbiasedness."
   }
 ];

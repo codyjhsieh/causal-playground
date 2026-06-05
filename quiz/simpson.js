@@ -1,6 +1,6 @@
 export const questions = [
   {
-    q: "In the UC Berkeley 1973 data, the aggregate admission rate was approximately <b>44% for men</b> and <b>30% for women</b>. After splitting by department, the within-department gap largely disappeared or reversed. What single word names the variable that caused this reversal?",
+    q: "In the UC Berkeley 1973 data, the aggregate admission rate was approximately <strong>44% for men</strong> and <strong>30% for women</strong>. After splitting by department, the within-department gap largely disappeared or reversed. What single word names the variable that caused this reversal?",
     choices: [
       "Randomization",
       "Confounder",
@@ -22,7 +22,7 @@ export const questions = [
     explain: "Within a single department, both men and women face the same admission rate baseline. The confound arose because men and women chose departments with very different overall rates. Holding department fixed removes that cross-department variation from the comparison, leaving only the within-department gender signal — which is near zero or slightly favors women.",
   },
   {
-    q: "Select <b>all</b> conditions that must hold for Simpson's Paradox to occur in a dataset.",
+    q: "Select <strong>all</strong> conditions that must hold for Simpson's Paradox to occur in a dataset.",
     choices: [
       "The pooled trend goes in the opposite direction from most or all subgroup trends",
       "The subgroups must differ in both the exposure rate and in the outcome's base rate",

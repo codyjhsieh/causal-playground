@@ -824,7 +824,7 @@ export function mount(root) {
     "<strong>Prediction</strong> — recompute W with the <em>same</em> inferred U in the modified graph. " +
     "The result W<sub>E'</sub> is this real worker's counterfactual log-wage, differing from E[W|do(E')]=βE' (population interventional average) " +
     "because abduction locked in <em>their</em> latent ability — a worker with above-average ability has a higher CF wage than the population mean. " +
-    "<em>Note: β and σ_W are calibrated to real Card (1995) data; the structural latent-ability form is a modeling assumption — unit counterfactuals are never directly observed (Pearl 2009).</em>";
+    "<em>Note: β and σ_W are calibrated to real Card (1995) data; the structural latent-ability form is a modeling assumption — unit counterfactuals are never directly observed (Pearl (2009)).</em>";
 
   // ── Animation loop ─────────────────────────────────────────────────────────
   const stop = onFrame((dt) => {

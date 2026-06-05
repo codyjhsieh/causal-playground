@@ -259,7 +259,8 @@ export function mount(root) {
   const idea =
     "When a confounder is affected by past treatment AND drives future treatment AND outcome " +
     "(treatment-confounder feedback), ordinary regression adjustment fails in BOTH directions: " +
-    "leave L1 out → confounded; adjust for L1 → you block the A0→Y causal path and open collider bias. " +
+    "leave L1 out → confounded; adjust for L1 → you block the A0→L1→Y causal path " +
+    "and open collider bias (L1 is a descendant of A0 and a collider between L0 and Y). " +
     "Only the g-formula and MSM/IPTW get it right.";
 
   const { root: layout, stage, panel, caption } = lessonLayout({ title, idea });
@@ -393,11 +394,13 @@ export function mount(root) {
     "<strong>g-formula (Robins 1986)</strong>: " +
     "E[Y(a)] = Σ<sub>l</sub> E[Y|A=a, L=l] P(L=l | do(past treatment)) — " +
     "standardize over the <em>interventional</em> distribution of L. " +
-    "<strong>Key lesson</strong>: adjusting for a time-varying confounder L1 that sits on the " +
-    "A0→Y causal path is <em>not</em> a fix — it blocks causal effect and induces collider bias " +
-    "(bias in opposite direction to naive). " +
-    "The g-formula and MSM/IPTW correctly propagate the do-operator through the time-varying process. " +
-    "— Robins 1986 (g-formula); Robins, Hernán &amp; Brumback 2000 (MSM/IPTW); " +
+    "<strong>Key lesson</strong>: L1 is a descendant of past treatment A0 and a collider " +
+    "(common cause of A1 and Y), so adjusting for it is <em>still biased</em> — " +
+    "it blocks the A0→L1→Y causal path while opening a spurious backdoor through L0. " +
+    "Only the g-formula and MSM/IPTW correctly propagate the do-operator through the time-varying process. " +
+    "Uses real JOBS II baseline covariates with simulated longitudinal dynamics (semi-synthetic), " +
+    "so the true ATE is known exactly. " +
+    "— Robins (1986) (g-formula); Robins, Hernán &amp; Brumback (2000) (MSM/IPTW); " +
     "Hernán &amp; Robins, <em>Causal Inference: What If</em>.";
 
   // ---- DAG drawing ----------------------------------------------------------

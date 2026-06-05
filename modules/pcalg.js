@@ -513,7 +513,7 @@ export function mount(root) {
 
   const { root: layout, stage, panel, caption } = lessonLayout({
     title: "Constraint-Based Discovery · PC Algorithm",
-    idea: "Start fully connected. Delete edges when conditional independence is found. Orient surviving edges via v-structure detection and Meek's rules. The result is a CPDAG — a set of DAGs indistinguishable from data alone.",
+    idea: "Can observational data alone reveal causal structure? The PC algorithm (Spirtes, Glymour & Scheines 2000) starts with a fully connected graph, deletes edges when a conditional-independence test screens off a pair, then orients surviving edges via v-structure detection and Meek's propagation rules. The output is a CPDAG — the set of all DAGs that are statistically indistinguishable from the true graph using observational data only.",
   });
   root.appendChild(layout);
 
@@ -751,7 +751,7 @@ export function mount(root) {
 
   // ---- Challenge ----
   const chal = challenge({
-    goal: "Tune α to reach SHD ≤ 3 vs the Sachs consensus on this 7-protein subset. Gold edges = consensus directions. Dashed edges = unresolved (Markov ambiguity) — you cannot distinguish them from data alone.",
+    goal: "Tune α and run discovery to reach SHD ≤ 3 against the Sachs et al. (2005) consensus on this 7-protein subset. Gold edges match the consensus direction; dashed edges are Markov-equivalent ambiguities that cannot be resolved from observational data alone.",
   });
 
   // ---- Play/Step controls ----
@@ -858,15 +858,14 @@ export function mount(root) {
 
   // ---- Caption ----
   caption.innerHTML =
-    "The <strong>PC algorithm</strong> (Spirtes, Glymour &amp; Scheines 2000) recovers a causal skeleton by " +
-    "testing conditional independence at increasing conditioning-set orders, then orients edges via " +
-    "<strong>v-structure detection</strong> (X→Z←Y when Z ∉ sep(X,Y)) and <strong>Meek's propagation rules</strong> " +
-    "(Meek 1995) — producing a <em>CPDAG</em> (complete partially directed acyclic graph). " +
-    "Compelled arrows are identifiable from observational data; dashed undirected edges are Markov-equivalent " +
-    "ambiguities that no independence test can resolve without intervention. " +
-    "Data: <strong>Sachs et al. (Science 2005)</strong>, 7-protein subset of the 11-phosphoprotein signaling network, " +
-    "n=" + N + " single-cell flow-cytometry measurements. " +
-    "Compare with score-based <strong>GES</strong> (Chickering 2002) and <strong>FCI</strong> for latent confounders (Spirtes, Glymour &amp; Scheines 2000; Meek 1995).";
+    "The <strong>PC algorithm</strong> (Spirtes, Glymour &amp; Scheines 2000) recovers a causal skeleton from observational data by " +
+    "testing conditional independence at increasing conditioning-set orders (order 0, 1, 2, …): remove edge X–Y whenever a set S is found such that X ⫫ Y | S. " +
+    "Surviving edges are then oriented via <strong>v-structure detection</strong> (orient X→Z←Y when Z ∉ sep(X, Y)) and <strong>Meek's propagation rules</strong> " +
+    "(R1: no new v-structure; R2: acyclicity), producing a <em>CPDAG</em> — the complete partially directed acyclic graph representing the Markov-equivalence class. " +
+    "Compelled arrows (solid) are identifiable from data alone; dashed undirected edges are Markov-equivalent ambiguities that require interventional data to resolve. " +
+    "Data: <strong>Sachs et al. (Science 2005)</strong>, 7-protein subset of an 11-phosphoprotein flow-cytometry signaling network (n=" + N + " cells). " +
+    "SHD (structural Hamming distance) counts missing + extra + mis-oriented edges vs. the consensus network. " +
+    "Spirtes, Glymour &amp; Scheines (2000); Meek (1995).";
 
   // ---- Animation loop ----
   const stop = onFrame((dt) => {

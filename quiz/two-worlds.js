@@ -11,7 +11,7 @@ export const questions = [
     explain: "Potential outcomes exist for every unit in theory, but the fundamental problem of causal inference is that only the outcome under the realized treatment is observed. A treated participant lived in the Y(1) world; their Y(0) — what they would have earned without training — never happened and is not recorded anywhere.",
   },
   {
-    q: "The NSW module computes a module-level <b>ATE ≈ +$1,794</b> as the difference in mean 1978 earnings between the treated and control arms. This estimate is valid because:",
+    q: "The NSW module computes a module-level <strong>ATE ≈ +$1,794</strong> as the difference in mean 1978 earnings between the treated and control arms. This estimate is valid because:",
     choices: [
       "NSW uses a very large sample (thousands of participants), which eliminates all bias",
       "Randomization makes the treated and control groups exchangeable: E[Y(0)] is the same for both, so E[Y|T=1] − E[Y|T=0] = E[Y(1) − Y(0)]",
@@ -22,7 +22,7 @@ export const questions = [
     explain: "Random assignment ensures that treatment assignment T is independent of potential outcomes: {Y(0),Y(1)} ⫫ T. Under this condition, E[Y|T=1] = E[Y(1)] and E[Y|T=0] = E[Y(0)], so their difference is the ATE. Sample size only reduces variance; it does not create identification. In observational studies the same arithmetic can be severely confounded.",
   },
   {
-    q: "Select <b>all</b> true statements about Individual Treatment Effects (ITEs) in the NSW experiment.",
+    q: "Select <strong>all</strong> true statements about Individual Treatment Effects (ITEs) in the NSW experiment.",
     choices: [
       "ITEs τᵢ = Y(1)ᵢ − Y(0)ᵢ are defined for each participant but cannot be observed for any of them",
       "Randomization identifies every ITE in the same way it identifies the ATE",
@@ -44,7 +44,7 @@ export const questions = [
     explain: "A positive average conceals heterogeneity: some participants may have been harmed or unaffected while others gained a lot. ITEs are not identified (the missing counterfactual problem), so we cannot know which individuals benefited. The module's God-mode histogram shows the modeled ITE distribution spans both positive and negative values even under the naive imputation.",
   },
   {
-    q: "The NSW module shows a 'God mode' that reveals <em>modeled</em> counterfactuals by imputing the arm mean. Why does this still confirm that the <b>observed difference ≈ ATE</b>, even though individual counterfactuals are fabricated?",
+    q: "The NSW module shows a 'God mode' that reveals <em>modeled</em> counterfactuals by imputing the arm mean. Why does this still confirm that the <strong>observed difference ≈ ATE</strong>, even though individual counterfactuals are fabricated?",
     choices: [
       "Because arm-mean imputation happens to equal the true individual counterfactuals in this dataset",
       "By definition of the sample mean: when Y(0) is imputed as the control mean for all treated units, the average of (Y(1)ᵢ − imputed Y(0)) across treated units equals (mean treated) − (mean control), which is the observed difference",

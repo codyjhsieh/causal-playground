@@ -336,8 +336,8 @@ export function mount(root) {
     "Factual loss is MSE on observed yf (z-scored); the CFR balancing penalty α·MMD(Φ_T, Φ_C) minimises the " +
     "linear-kernel maximum mean discrepancy between treated and control representation distributions, " +
     "<em>bounding the counterfactual generalisation error</em> (Shalit, Johansson &amp; Sontag, ICML 2017 Thm. 1). " +
-    "True ATE ≈ 4.0. &nbsp;📄 " +
-    "<em>Hill 2011 (IHDP); Shalit, Johansson &amp; Sontag — CFR/TARNet, ICML 2017.</em>";
+    "True ATE ≈ 4.0. " +
+    "<em>Hill (2011) IHDP; Shalit, Johansson &amp; Sontag (2017) — CFR/TARNet, ICML 2017.</em>";
 
   // ── springs for smooth animated readouts ────────────────────────────────────
   const mmdSpring  = new Spring(0, { stiffness: 40, damping: 12 });

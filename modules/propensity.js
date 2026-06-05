@@ -195,7 +195,7 @@ export function mount(root) {
 
   const { root: layout, stage, panel, caption } = lessonLayout({
     title: "Propensity Scores",
-    idea: "A single number — the probability of treatment given covariates — encodes all confounding information. Units with the same propensity score are as good as randomized to each other.",
+    idea: "The propensity score e(x) = P(T=1|X=x) is a balancing score: conditioning on this single number achieves the same covariate balance as conditioning on the full covariate vector X — provided all confounders are measured (strong ignorability). Units with equal propensity scores are as good as randomized to each other.",
   });
 
   stage.append(covWrap, psWrap, legendEl);
@@ -274,12 +274,13 @@ export function mount(root) {
   );
 
   caption.innerHTML =
-    "<strong>LaLonde 1986; Dehejia &amp; Wahba 1999</strong>. " +
+    "<strong>LaLonde (1986); Dehejia &amp; Wahba (1999)</strong>. " +
     "NSW treated units (orange, <em>n</em>=" + nswTreated.length + ") vs. CPS non-experimental comparison (blue, <em>n</em>=" + cpsSample.length + "). " +
-    "The CPS group is far richer with higher prior earnings, so the naive difference ≈ −$10,000 is heavily confounded. " +
-    "The <strong>propensity score</strong> e(x)=P(T=1|x) is fit by logistic regression on age, education, race, marital status, and prior earnings (re74, re75). " +
-    "Collapsing to this single axis and matching each treated unit to its nearest CPS control in propensity score recovers an estimate close to the " +
-    "experimental benchmark of +$" + Math.round(EXPERIMENTAL_EFFECT).toLocaleString() + " — demonstrating that matching on the propensity score corrects selection bias when the propensity is correctly specified.";
+    "CPS workers have much higher prior earnings (re74, re75), are older, and more often married, so the naive difference ≈ −$10,000 is heavily confounded by selection. " +
+    "The <strong>propensity score</strong> <em>e</em>(x) = P(T=1|x) is fit by logistic regression on eight covariates: age, education, race (black, Hispanic), marital status, no-degree indicator, and prior earnings (re74, re75). " +
+    "Collapsing to this single axis and matching each treated unit to its nearest CPS control recovers an estimate close to the " +
+    "experimental benchmark of +$" + Math.round(EXPERIMENTAL_EFFECT).toLocaleString() + " — demonstrating the Rosenbaum–Rubin (1983) balancing-score theorem in practice. " +
+    "The identifying assumption is <strong>strong ignorability</strong>: all variables that jointly drive training selection and 1978 earnings are captured in the eight covariates.";
 
   root.appendChild(layout);
 

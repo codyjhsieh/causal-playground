@@ -83,7 +83,7 @@ export function mount(root) {
 
   const { root: layout, stage, panel, caption } = lessonLayout({
     title: "Simpson's Paradox",
-    idea: "UC Berkeley 1973: the aggregate data showed women admitted at far lower rates than men — apparent bias. Condition on department and the pattern reverses within nearly every department. Same numbers, opposite story.",
+    idea: "UC Berkeley 1973: the aggregate data showed women admitted at far lower rates than men — apparent bias. Condition on department and the gap reverses within most departments. Same numbers, opposite story.",
   });
 
   // ── canvas ───────────────────────────────────────────────────────────────────

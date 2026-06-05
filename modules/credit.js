@@ -274,7 +274,7 @@ export function mount(root) {
   // ── Layout ─────────────────────────────────────────────────────────────────
   const { root: layout, stage, panel, caption } = lessonLayout({
     title: "Counterfactual Credit",
-    idea:  "Subtract the return you'd have gotten anyway — with the same luck — and policy-gradient variance collapses without bias.",
+    idea:  "Subtract the return you would have gotten anyway — under the same exogenous luck draw — and policy-gradient variance collapses without bias. Any action-independent baseline b(s) preserves unbiasedness; the counterfactual baseline cancels luck algebraically, reducing variance far below what the value baseline achieves.",
   });
   root.appendChild(layout);
 
@@ -377,21 +377,21 @@ export function mount(root) {
   );
 
   caption.innerHTML =
-    "<strong>Real data:</strong> Reward means R(s,a) = empirical P(got HIV result | incentive level <em>a</em>, distance state <em>s</em>) from " +
-    "<strong>Thornton, AER 2008</strong> Malawi HIV incentive RCT (n≈1,500 complete cases). " +
-    "Actions: none / low / mid / high incentive (tinc bins); states: near / far from VCT center (median distvct split). " +
+    "<strong>Real reward means:</strong> R(s,a) = empirical P(got HIV result | incentive level <em>a</em>, distance state <em>s</em>) " +
+    "from the <strong>Thornton (AER 2008)</strong> Malawi HIV incentive RCT. " +
+    "Actions are four incentive bins (none / low / mid / high <em>tinc</em>); states are near vs. far from the VCT center (median <em>distvct</em> split). " +
     "The action-independent noise σ·U<sub>luck</sub> is a <em>simulation</em> of environment stochasticity added to demonstrate " +
-    "gradient-variance mechanics — the reward <em>means</em> are real. " +
+    "gradient-variance mechanics — the reward <em>means</em> themselves are real. " +
     "A baseline <em>b(s)</em> that does <strong>not depend on the taken action</strong> leaves the policy-gradient estimator unbiased: " +
     "<span class='k'>E<sub>a~π</sub>[(R−b)∇log π(a|s)] = E[R∇log π]</span> " +
-    "because <span class='k'>E[∇log π(a|s)]=0</span>. " +
-    "The counterfactual baseline <em>b_CF = Σ<sub>a'</sub>π(a'|s)·R(s,a'|U<sub>luck</sub>)</em> " +
-    "reuses the <strong>same exogenous noise draw</strong> (Pearl's abduction): luck cancels in the advantage, " +
-    "collapsing variance without bias. " +
-    "Challenge: Var(counterfactual) ≪ Var(REINFORCE), all unbiased. " +
-    "Refs: <strong>Thornton, AER 2008</strong> (reward data) · " +
-    "<strong>Mesnard et al. 2021</strong> (Counterfactual Credit Assignment) · " +
-    "<strong>Foerster et al. 2018</strong> (COMA: Counterfactual Multi-Agent Policy Gradients).";
+    "because <span class='k'>E[∇log π(a|s)] = 0</span>. " +
+    "The <strong>counterfactual baseline</strong> <em>b<sub>CF</sub> = Σ<sub>a′</sub>π(a′|s)·R(s,a′|U<sub>luck</sub>)</em> " +
+    "reuses the <strong>same exogenous noise draw</strong> across all actions (Pearl's abduction step): " +
+    "the luck term cancels exactly in the advantage R − b<sub>CF</sub>, collapsing variance without introducing bias " +
+    "(Mesnard et al., <em>Counterfactual Credit Assignment in Model-Free RL</em>, NeurIPS 2021; " +
+    "Foerster et al., <em>COMA</em>, AAAI 2018). " +
+    "All three estimators — REINFORCE, value baseline, counterfactual baseline — remain centered on the true gradient; " +
+    "only their widths differ.";
 
   // ── Helpers ────────────────────────────────────────────────────────────────
   function resetEstimates() {

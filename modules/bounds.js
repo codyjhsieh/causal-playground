@@ -137,9 +137,11 @@ export function mount(root) {
 
   const { root: layout, stage, panel, caption } = lessonLayout({
     title: "Partial Identification & Bounds",
-    idea: "Even without full identification, the data + assumptions trap the effect in an interval. " +
-          "Each assumption tightens it. NSW is an RCT, so randomization collapses the interval to a point — " +
-          "confirming the true ATE is always inside every valid bound.",
+    idea: "When an effect cannot be point-identified, the data and assumptions still trap it inside an interval — partial identification (Manski 1990). " +
+          "Each credible assumption tightens the interval. " +
+          "The NSW binary employment outcome (Y ∈ {0, 1}) gives a no-assumption width of exactly 1; " +
+          "monotonicity and selection assumptions squeeze it progressively. " +
+          "Because NSW is an RCT, randomization collapses the interval to a point, confirming the true ATE always lies inside every valid bound.",
   });
 
   // ── Stage: number-line canvas ──────────────────────────────────────────────
@@ -259,21 +261,23 @@ export function mount(root) {
     ]),
     panelSection("Challenge", [chal]),
     h("p", { class: "bounds-cite" }, [
-      "No-assumption width = P(T=0) + P(T=1) = 1 by construction. " +
-      "MTR tightens LB to 0. MTS tightens UB to the observed diff (= true ATE in this RCT). " +
-      "Manski 1990; Manski 1997; Balke & Pearl 1997 (IV bounds).",
+      "No-assumption width = P(T=0) + P(T=1) = 1 by construction (Manski 1990). " +
+      "MTR tightens LB to 0. MTS tightens UB to the observed difference (= true ATE in this RCT). " +
+      "References: Manski (1990); Manski (1997); Balke &amp; Pearl (1997) — IV bounds.",
     ]),
   );
 
   caption.innerHTML =
-    "Manski (1990) worst-case bounds: <em>LB = E[Y|T=1]·P(T=1) − E[Y|T=0]·P(T=0) − P(T=1)</em> &nbsp;and&nbsp; " +
-    "<em>UB = E[Y|T=1]·P(T=1) − E[Y|T=0]·P(T=0) + P(T=0)</em>. " +
-    "Width = 1 with no assumptions, because the unobserved potential outcomes can be anything in [0,1]. " +
-    "<strong>Monotone Treatment Response</strong> (training can't hurt) pins LB ≥ 0. " +
-    "<strong>Monotone Treatment Selection</strong> (self-selection into treatment) tightens UB to the observed arm difference. " +
-    "Because NSW is <strong>randomized</strong>, that observed difference IS the true ATE — collapsing the interval to a point. " +
+    "<strong>Manski (1990) worst-case bounds</strong> for a binary outcome Y ∈ {0, 1}: " +
+    "<em>LB = E[Y|T=1]·P(T=1) + 0·P(T=0) − (E[Y|T=0]·P(T=0) + 1·P(T=1))</em> " +
+    "and <em>UB = E[Y|T=1]·P(T=1) + 1·P(T=0) − (E[Y|T=0]·P(T=0) + 0·P(T=1))</em>. " +
+    "Width = P(T=1) + P(T=0) = <strong>exactly 1</strong> with no assumptions — " +
+    "the unobserved potential outcomes span the full [0, 1] interval. " +
+    "<strong>Monotone Treatment Response</strong> (Manski 1997) — training never hurts anyone — pins LB ≥ 0. " +
+    "<strong>Monotone Treatment Selection</strong> — those who select in have weakly higher potential outcomes — tightens UB to the observed arm difference. " +
+    "Because NSW is randomized, that difference <em>is</em> the true ATE, collapsing the interval to a point. " +
     "Identification is a spectrum, not all-or-nothing. " +
-    "Sources: <strong>Manski 1990; Manski 1997; Balke &amp; Pearl 1997</strong>.";
+    "References: Manski (1990); Manski (1997); Balke &amp; Pearl (1997) — IV bounds.";
 
   root.appendChild(layout);
 

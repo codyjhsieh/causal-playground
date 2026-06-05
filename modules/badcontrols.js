@@ -353,7 +353,7 @@ export function mount(root) {
   // ---------- layout ----------
   const { root: layout, stage, panel, caption } = lessonLayout({
     title: "Bad Controls & Collider Bias",
-    idea: "More controls is NOT always better. Toggle variables into your adjustment set and watch the return-to-schooling estimate shift. Colliders and mediators manufacture bias — your job is to build the unbiased set.",
+    idea: "More controls is not always better. Using Card (1995) earnings data, toggle variables into your adjustment set and watch the return-to-schooling estimate shift. Confounders block backdoor paths; colliders and mediators manufacture bias. Your job is to identify the minimal sufficient adjustment set.",
   });
 
   // ---------- DAG ----------
@@ -508,14 +508,12 @@ export function mount(root) {
   );
 
   caption.innerHTML =
-    "<strong>Bad-controls taxonomy (Cinelli, Forney &amp; Pearl 2022; Greenland 2003).</strong> " +
-    "A <em>confounder</em> is a common cause of treatment &amp; outcome — condition on it. " +
-    "A <em>mediator</em> lies <em>on</em> the causal path — conditioning removes part of the effect (overcontrol). " +
-    "A <em>collider</em> is caused by both treatment &amp; outcome — conditioning <strong>opens</strong> a non-causal path. " +
-    "An <em>M-collider</em> is a pre-treatment collider between two background factors — looks innocent, induces M-bias. " +
-    "Data: Card (1995), NLSYM; treatment: <em>educ</em>; outcome: <em>lwage</em>. " +
-    "References: Cinelli, Forney &amp; Pearl (2022) <em>A Crash Course in Good and Bad Controls</em>; " +
-    "Greenland (2003) <em>Quantifying Biases in Causal Models: Classical Confounders and Colliders</em>.";
+    "<strong>Bad-controls taxonomy</strong> (Cinelli, Forney &amp; Pearl 2022). " +
+    "A <em>confounder</em> is a common cause of treatment and outcome — include it to block the backdoor path. " +
+    "A <em>mediator</em> lies on the causal path (educ → smsa → lwage) — conditioning removes the portion of the effect that operates through that channel (<em>overcontrol bias</em>). " +
+    "A <em>collider</em> is caused by both treatment and outcome — conditioning <strong>opens</strong> an otherwise-blocked non-causal path (Berkson's paradox). " +
+    "An <em>M-collider</em> is a pre-treatment variable caused by two independent background factors that both affect treatment — conditioning induces <em>M-bias</em> even though the variable predates treatment. " +
+    "Data: Card (1995), NLSYM; treatment: <em>educ</em>; outcome: <em>lwage</em> (log hourly wage).";
 
   root.appendChild(layout);
 

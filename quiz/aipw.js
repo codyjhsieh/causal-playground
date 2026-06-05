@@ -19,7 +19,7 @@ export const questions = [
       "AIPW is doubly robust because it uses twice as much data as a single-model estimator."
     ],
     answer: [0, 1, 2],
-    explain: "A, B, and C are all correct. A: with a correct propensity model, re-weighting by 1/ê balances the covariate distribution, making the outcome-model residuals mean-zero in expectation. B: with a correct outcome model, the predicted counterfactual matches the true conditional mean so residuals centre at zero regardless of propensity weights. C: if both are wrong, neither mean-zero property holds and biases compound. D is simply false — AIPW uses the same n observations as any other estimator."
+    explain: "A, B, and C are all correct. A: when ê is correctly specified, the IPW augmentation term T/ê·(Y−μ̂₁) has expected value zero in the population regardless of what μ̂₁ is — so any bias from the outcome model is absorbed and AIPW remains consistent. B: when μ̂ is correctly specified, residuals (Y−μ̂) are mean-zero within each covariate stratum, so the augmentation term E[T/ê·(Y−μ̂₁)] = 0 regardless of ê — a different route to the same mean-zero property. C: when both are wrong, neither mean-zero condition holds, biases from both augmentation pieces accumulate, and consistency fails. D is false — AIPW uses the same n observations as any other estimator."
   },
   {
     q: "The AIPW module uses the efficient influence function (EIF) score ψᵢ to compute confidence intervals: SE = sd(ψ)/√n. What property of the EIF score justifies this standard-error formula?",
@@ -52,6 +52,6 @@ export const questions = [
       "The AIPW point estimate equals the true ATE exactly when both models are linear, because OLS is unbiased."
     ],
     answer: 1,
-    explain: "IHDP uses real covariate data from a randomized experiment but the potential outcomes μ₀, μ₁ are semi-synthetic (simulated under a nonlinear DGP). Coverage of the EIF-based CI hinges on: (i) consistency of the nuisance estimates (here achieved because the linear models approximate the DGP reasonably), (ii) consistency of the variance estimate sd(ψ)/√n, and (iii) n large enough for asymptotic normality of mean(ψ). A is wrong — the IHDP observational use here is not an RCT analysis; treatment assignment in the real IHDP was observational. C is wrong — the DGP is not Gaussian, and coverage is asymptotic, not exact. D confuses unbiasedness with exact equality and ignores model error."
+    explain: "IHDP (Hill 2011) uses real covariate data but <em>simulated</em> potential outcomes (μ₀, μ₁ drawn from a nonlinear DGP) — the true ATE = mean(μ₁ − μ₀) ≈ 4.0 is therefore known exactly. Coverage of the EIF-based CI depends on: (i) the nuisance models being approximately correct (linear OLS approximates the DGP reasonably here); (ii) the variance estimator sd(ψ)/√n being consistent; and (iii) n = 747 being large enough for asymptotic normality of mean(ψ). A is wrong: the module uses IHDP as a semi-synthetic observational benchmark — even though the original study was an RCT, the module does not exploit randomization; propensity scores are fitted from covariates as in an observational study. C is wrong — the potential-outcome DGP is not Gaussian and coverage is asymptotic, not exact. D confuses asymptotic consistency with finite-sample exactness."
   }
 ];

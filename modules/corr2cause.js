@@ -426,7 +426,7 @@ export function mount(root) {
   injectStyle();
 
   const title = "LLMs & Causal Reasoning";
-  const idea = "Correlation reveals only the Markov equivalence class — a set of indistinguishable causal DAGs. LLMs (and humans) that orient edges beyond what the data permits are overconfident.";
+  const idea = "Correlation reveals only the Markov equivalence class (MEC) — the set of DAGs with the same skeleton and same v-structures, hence statistically indistinguishable from observational data alone. LLMs and humans that orient reversible edges beyond what the data permits are overconfident (Jin et al. 2024).";
 
   const { root: layout, stage, panel, caption } = lessonLayout({ title, idea });
   root.appendChild(layout);
@@ -647,17 +647,17 @@ export function mount(root) {
 
   // ---- Caption ----
   caption.innerHTML =
-    "Correlation determines causation only up to the <strong>Markov equivalence class</strong> (MEC) — the set of DAGs with identical skeletons and v-structures, hence indistinguishable from observational data alone. " +
-    "V-structure edges (<em>X→Z←Y</em>, X and Y non-adjacent) are the only ones observationally orientable. " +
-    "The seed DAG uses a subgraph of the <strong>Sachs et al. (2005)</strong> protein-signaling network (~853 single cells, 11 phosphoproteins); " +
-    "empirical partial correlations computed from these real cells confirm d-separated pairs are ≈0 while d-connected pairs are clearly nonzero — " +
-    "yet the reversible edges remain unidentified even with real data. " +
-    "Cited: Jin et al., <em>Can Large Language Models Infer Causation from Correlation?</em> (Corr2Cause, ICLR 2024); " +
-    "Jin et al., <em>CLadder</em> (NeurIPS 2023); " +
-    "Kıcıman et al., <em>Causal Reasoning and Large Language Models</em> (2023); " +
-    "Verma &amp; Pearl, <em>Equivalence and Synthesis of Causal Models</em> (1990); " +
-    "Spirtes, Glymour &amp; Scheines, <em>Causation, Prediction and Search</em> (PC algorithm, 1993/2000); " +
-    "Sachs et al., <em>Causal Protein-Signaling Networks Derived from Multiparameter Single-Cell Data</em>, Science 2005.";
+    "Correlation determines causation only up to the <strong>Markov equivalence class</strong> (MEC) — the set of DAGs with identical skeletons and v-structures, hence indistinguishable from observational data alone " +
+    "(Verma &amp; Pearl 1990). " +
+    "V-structure edges (<em>X→Z←Y</em>, X and Y non-adjacent) are the <em>only</em> edges whose direction is identifiable from observational independence tests. " +
+    "The seed DAG is a subgraph of the Sachs et al. (2005) protein-signaling consensus network " +
+    "(n=" + N_SACHS + " single-cell flow-cytometry measurements, 11 phosphoproteins); " +
+    "empirical partial correlations confirm d-separated pairs are ≈0 while d-connected pairs are clearly nonzero — " +
+    "yet the reversible chain edges Raf—Mek—Erk remain unidentified even from real data. " +
+    "Jin et al. (<em>Corr2Cause</em>, ICLR 2024) show that GPT-4 and other LLMs perform near chance at distinguishing compelled from reversible edges, " +
+    "confusing causal plausibility with statistical identifiability. " +
+    "PC algorithm: Spirtes, Glymour &amp; Scheines (2000). " +
+    "Sachs et al., <em>Science</em> 2005.";
 
   // ---- Core refresh ----
   function refresh() {

@@ -1,6 +1,6 @@
 export const questions = [
   {
-    q: "Card & Krueger (1994) compared fast-food employment in New Jersey (minimum wage raised in April 1992) to Pennsylvania (no change). Intuitively, why is Pennsylvania needed at all? Why not just compare NJ's employment before and after the hike?",
+    q: "Card &amp; Krueger (1994) compared fast-food employment in New Jersey (minimum wage raised from $4.25 to $5.05 in April 1992) to Pennsylvania (no change). Intuitively, why is Pennsylvania needed at all? Why not just compare NJ&rsquo;s employment before and after the hike?",
     choices: [
       "Pennsylvania data is needed to satisfy the SUTVA assumption that treatment does not spill over state lines.",
       "Without a control group, a before-after comparison in NJ cannot separate the effect of the minimum-wage hike from any other trend that happened over the same period (e.g., macroeconomic recovery).",

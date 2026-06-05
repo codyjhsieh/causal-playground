@@ -623,7 +623,7 @@ export function mount(root) {
 
   // ── Challenge (SHD ≤ 8 is achievable from observational data with tuned L1)
   const chal = challenge({
-    goal: "Run until h(W) < 0.01 (acyclic) and SHD ≤ 8 vs the Sachs consensus. Tune L1 sparsity to prune false edges. Recovering all 17 ground-truth edges from observational data alone is genuinely hard — that's the lesson.",
+    goal: "Run until h(W) < 0.01 (acyclic) and SHD ≤ 8 vs the Sachs consensus. Tune L1 sparsity to prune false edges. Recovering all 19 ground-truth edges from observational data alone is genuinely hard — that's the lesson.",
   });
 
   // ── Controls
