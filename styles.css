@@ -456,3 +456,72 @@ input[type=range]::-webkit-slider-thumb:active { cursor: grabbing; }
 @media (max-width: 820px) {
   .stage-title, .stage p { white-space: normal !important; word-break: break-word; overflow-wrap: anywhere; }
 }
+
+/* ===== Interactive "test yourself" quiz ===== */
+.quiz {
+  margin-top: 26px; border-radius: 18px; padding: 18px 20px;
+  background: var(--glass); border: 1px solid var(--glass-edge);
+  box-shadow: var(--glass-shadow), var(--glass-inset);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(180%);
+  backdrop-filter: blur(var(--blur)) saturate(180%);
+  max-width: 760px;
+}
+.quiz-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.quiz-title { font-size: 15px; font-weight: 700; color: var(--ink); display: inline-flex; align-items: center; gap: 8px; }
+.quiz-icon { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 7px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; font-size: 13px; }
+.quiz-progress { font-family: var(--mono); font-size: 12.5px; color: var(--dim); }
+.quiz-prompt { font-size: 15.5px; line-height: 1.5; color: var(--ink); margin: 0 0 4px; }
+.quiz-qnum { font-family: var(--mono); color: var(--accent); font-weight: 700; margin-right: 4px; }
+.quiz-hint { font-size: 12.5px; color: var(--dim); margin: 0 0 10px; font-style: italic; }
+.quiz-choices { display: flex; flex-direction: column; gap: 9px; margin: 12px 0; }
+.quiz-choice {
+  display: flex; align-items: flex-start; gap: 11px; text-align: left;
+  padding: 12px 14px; border-radius: 12px; cursor: pointer;
+  background: rgba(255,255,255,0.5); border: 1px solid var(--glass-hairline);
+  font-size: 14.5px; line-height: 1.45; color: var(--ink); font-family: var(--sans);
+  transition: background .14s, border-color .14s, transform .06s;
+}
+.quiz-choice:hover { background: rgba(255,255,255,0.8); border-color: var(--accent); }
+.quiz-choice:active { transform: translateY(1px); }
+.quiz-choice.picked { border-color: var(--accent); background: rgba(106,78,240,.10); }
+.quiz-mark {
+  flex: none; width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center;
+  font-family: var(--mono); font-size: 12px; font-weight: 700;
+  background: rgba(255,255,255,0.7); border: 1px solid var(--glass-hairline); color: var(--dim);
+}
+.quiz-choice.done { cursor: default; }
+.quiz-choice.done:hover { background: rgba(255,255,255,0.5); border-color: var(--glass-hairline); }
+.quiz-choice.correct { border-color: var(--pos); background: rgba(26,164,114,.12); }
+.quiz-choice.correct .quiz-mark { background: var(--pos); color: #fff; border-color: transparent; }
+.quiz-choice.correct .quiz-mark::after { content: "✓"; }
+.quiz-choice.correct .quiz-mark { font-size: 0; }
+.quiz-choice.correct .quiz-mark::after { font-size: 13px; }
+.quiz-choice.wrong { border-color: var(--neg); background: rgba(226,70,107,.10); opacity: .85; }
+.quiz-choice.wrong .quiz-mark { background: var(--neg); color: #fff; border-color: transparent; font-size: 0; }
+.quiz-choice.wrong .quiz-mark::after { content: "✕"; font-size: 13px; }
+.quiz-explain {
+  display: none; font-size: 13.5px; line-height: 1.55; color: #5f584b;
+  padding: 11px 13px; border-radius: 11px; margin: 4px 0 12px;
+  background: rgba(255,255,255,0.45); border-left: 3px solid var(--dim);
+}
+.quiz-explain.show { display: block; }
+.quiz-explain.ok { border-left-color: var(--pos); }
+.quiz-explain.bad { border-left-color: var(--neg); }
+.quiz-explain strong { color: var(--ink); }
+.quiz-foot { display: flex; gap: 10px; flex-wrap: wrap; }
+.quiz-summary { text-align: center; padding: 14px 6px; }
+.quiz-summary.pass .quiz-score { color: var(--pos); }
+.quiz-score { font-family: var(--mono); font-size: 38px; font-weight: 700; color: var(--accent); }
+.quiz-tier { font-size: 13px; color: var(--dim); margin: 4px 0 14px; text-transform: uppercase; letter-spacing: 1px; }
+
+/* Causal graphs: never clip nodes drawn near the viewBox edge */
+.dag { overflow: visible; }
+
+@media (max-width: 820px) {
+  .quiz { padding: 16px; }
+  .quiz-prompt { font-size: 16px; }
+  .quiz-choice { font-size: 15.5px; padding: 13px; }
+  /* graphs scale to fit the phone with no horizontal cutoff */
+  .stage .dag, .stage svg { width: 100% !important; height: auto !important; }
+}

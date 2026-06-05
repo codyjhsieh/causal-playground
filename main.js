@@ -5,6 +5,7 @@
 
 import { h, clear } from "./lib/dom.js";
 import { patchCanvas } from "./lib/canvaspatch.js";
+import { quizWidget } from "./lib/quiz.js";
 
 patchCanvas(); // make ctx.fillStyle = "var(--x)" work everywhere
 
@@ -184,8 +185,23 @@ function injectEli5(text) {
   else (main.querySelector(".lesson") || main).prepend(card);
 }
 
+// Lazy-load this module's question set and append an interactive quiz at the
+// bottom of the lesson. Guarded so a slow import can't attach to a lesson the
+// user has already navigated away from.
+async function injectQuiz(id) {
+  try {
+    const mod = await import(`./quiz/${id}.js`);
+    if (id !== currentNavId) return; // navigated away while loading
+    if (!mod || !Array.isArray(mod.questions) || !mod.questions.length) return;
+    const lesson = main.querySelector(".lesson");
+    if (lesson && !lesson.querySelector(".quiz")) lesson.appendChild(quizWidget(mod.questions));
+  } catch (e) { /* no quiz file for this module — skip silently */ }
+}
+
+let currentNavId = null;
 async function navigate(id) {
   const m = MODULES.find((x) => x.id === id) || MODULES[0];
+  currentNavId = m.id;
   [...nav.querySelectorAll(".nav-item")].forEach((el) =>
     el.classList.toggle("active", el.dataset.id === m.id));
   if (location.hash !== "#" + m.id) history.replaceState(null, "", "#" + m.id);
@@ -201,6 +217,7 @@ async function navigate(id) {
     currentCleanup = mod.mount(main) || null;
     injectEli5(m.eli5);
     main.scrollTop = 0;
+    injectQuiz(m.id);
   } catch (err) {
     clear(main);
     main.appendChild(h("div", { class: "lesson" }, [
