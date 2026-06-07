@@ -137,6 +137,9 @@ const MODULES = [
   { group: "Case Study", id: "hitsong", title: "The Hit Song Formula",
     eli5: "Everyone has a theory about what makes a song a hit — more energy, a catchy beat, the perfect tempo. So let the data settle it: run <strong>causal discovery</strong> on 6,000 songs’ audio fingerprints. You’ll uncover a tidy web of cause and effect among the sound features — and a punchline almost nobody expects about popularity itself.",
     load: () => import("./modules/hitsong.js") },
+  { group: "Case Study", id: "marketgraph", title: "Decoding the Market",
+    eli5: "Stocks seem to move as one — when the market’s up, almost everything’s up. But is that real connection, or <strong>one hidden hand</strong> pulling all the strings? Strip “the market” out of 20 big stocks and watch the tangled web collapse — leaving the true cause-and-effect clusters (oil with oil, banks with banks) and a hard truth about why nobody can call tomorrow’s move.",
+    load: () => import("./modules/marketgraph.js") },
 
   { group: "Capstone", id: "capstone", title: "Method Selection (Capstone)",
     eli5: "Real problems don’t come labeled “use IV.” Given a messy dataset and a question, the master move is <strong>choosing the right tool</strong>, defending its assumptions, and saying honestly what you still don’t know.",
