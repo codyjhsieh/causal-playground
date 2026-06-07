@@ -24,11 +24,11 @@ not `file://`, so use one of the servers above rather than opening the file.
 
 Every section opens with a plain-words **"In plain words"** intuition card and
 closes with an interactive **5-question quiz** (instant feedback, explanations,
-scoring) — 38 sections, 190 questions in all (incl. a novel case study).
+scoring) — 39 sections, 195 questions in all (incl. two novel case studies).
 
 ## The curriculum
 
-**38 modules**, each a self-contained interactive toy with a built-in challenge,
+**39 modules**, each a self-contained interactive toy with a built-in challenge,
 an ELI5 intro, and a quiz:
 
 Ordered as one conceptual spine: foundations → graphs & identification → estimating effects → heterogeneity & policy → quasi-experiments → counterfactuals & longitudinal → discovery → RL → frontier → case study → capstone.
@@ -89,9 +89,10 @@ Ordered as one conceptual spine: foundations → graphs & identification → est
 
 **Case Study**
 37. **Ghost Games — Crowds & Home Advantage** — COVID emptied the stadiums (crowd on→off→on); apply the whole toolkit to a real football dataset to show the crowd *causes* part of home advantage — partly through referee bias. *football-data.co.uk, 2018–22.*
+38. **The Hit Song Formula** — run causal *discovery* on 6,000 songs' audio features: a clean cause-and-effect network appears among the sound (energy ↔ loudness ↔ acousticness), but popularity has *no* strong measured cause — the real driver isn't in the data. *Spotify audio features via TidyTuesday.*
 
 **Capstone**
-38. **Method Selection** — match the identification strategy to the problem's structure and defend its assumptions.
+39. **Method Selection** — match the identification strategy to the problem's structure and defend its assumptions.
 
 ## Real datasets — every interactive runs on real public data
 
@@ -138,6 +139,7 @@ rows. A green provenance badge in each module names the dataset and citation.
 | Constraint-Based Discovery | Sachs protein network | Spirtes, Glymour & Scheines 2000 |
 | Bad Controls & Collider Bias | Card schooling & wages | Cinelli, Forney & Pearl 2022 |
 | Ghost Games (Case Study) | 7,203 top-5-league football matches, 2018–22 (crowd on→off→on) | football-data.co.uk |
+| The Hit Song Formula (Case Study) | 6,000 Spotify tracks — audio features & popularity (causal discovery) | Spotify API via TidyTuesday |
 | Method Selection (Capstone) | NSW, Card, Lee, Card-Krueger, Prop 99 | — |
 
 **Honest caveats.** Some quantities cannot exist in any real dataset — and the
@@ -200,7 +202,7 @@ To add a lesson: drop a file in `modules/`, add one line to the `MODULES` array 
 ## Test
 
 ```bash
-node test/smoke.mjs    # mounts all 38 modules headless, runs animation frames, asserts no crash
+node test/smoke.mjs    # mounts all 39 modules headless, runs animation frames, asserts no crash
 node test/nn.test.mjs  # gradient-checks the neural-net library
-node test/quiz.test.mjs # validates every quiz/<id>.js schema (190 questions)
+node test/quiz.test.mjs # validates every quiz/<id>.js schema (195 questions)
 ```

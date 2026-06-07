@@ -134,6 +134,9 @@ const MODULES = [
   { group: "Case Study", id: "ghostgames", title: "Ghost Games — Crowds & Home Advantage",
     eli5: "Home teams win more — everyone knows it, nobody fully knows why. Then COVID <strong>emptied the stadiums</strong>, switching the crowd off and later back on: a rare natural on/off/on experiment. Watch home advantage shrink when the fans vanish and rebound when they return — and catch the referees quietly favoring the home side only when a crowd is roaring.",
     load: () => import("./modules/ghostgames.js") },
+  { group: "Case Study", id: "hitsong", title: "The Hit Song Formula",
+    eli5: "Everyone has a theory about what makes a song a hit — more energy, a catchy beat, the perfect tempo. So let the data settle it: run <strong>causal discovery</strong> on 6,000 songs’ audio fingerprints. You’ll uncover a tidy web of cause and effect among the sound features — and a punchline almost nobody expects about popularity itself.",
+    load: () => import("./modules/hitsong.js") },
 
   { group: "Capstone", id: "capstone", title: "Method Selection (Capstone)",
     eli5: "Real problems don’t come labeled “use IV.” Given a messy dataset and a question, the master move is <strong>choosing the right tool</strong>, defending its assumptions, and saying honestly what you still don’t know.",

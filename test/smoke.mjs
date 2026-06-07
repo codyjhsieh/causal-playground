@@ -130,7 +130,7 @@ const MODULES = [
   // Mastery layer (advanced)
   "frontdoor", "docalc", "bounds", "aipw", "sensitivity", "metalearners", "policy",
   "gmethods", "mediation", "interference", "synth", "staggered", "pcalg",
-  "badcontrols", "ghostgames", "capstone",
+  "badcontrols", "ghostgames", "hitsong", "capstone",
 ];
 
 let failures = 0;
