@@ -24,77 +24,74 @@ not `file://`, so use one of the servers above rather than opening the file.
 
 Every section opens with a plain-words **"In plain words"** intuition card and
 closes with an interactive **5-question quiz** (instant feedback, explanations,
-scoring) — 37 sections, 185 questions in all.
+scoring) — 38 sections, 190 questions in all (incl. a novel case study).
 
 ## The curriculum
 
-**37 modules**, each a self-contained interactive toy with a built-in challenge,
+**38 modules**, each a self-contained interactive toy with a built-in challenge,
 an ELI5 intro, and a quiz:
+
+Ordered as one conceptual spine: foundations → graphs & identification → estimating effects → heterogeneity & policy → quasi-experiments → counterfactuals & longitudinal → discovery → RL → frontier → case study → capstone.
 
 **Foundations**
 1. **The Ladder of Causation** — Seeing / Doing / Imagining; one world, three answers.
 2. **Simpson's Paradox** — watch the regression line flip sign as a hidden group separates.
-3. **Potential Outcomes** — worlds split into factual & counterfactual; the fundamental problem made visible.
+3. **Potential Outcomes** — factual & counterfactual worlds; the fundamental problem made visible.
 4. **Confounding** — association *flows* through a backdoor; condition on the common cause to stop it.
 
-**Graphs**
-5. **d-Separation** — chain / fork / collider in one graph; block every path to make X ⫫ Y.
+**Causal Graphs & Identification**
+5. **d-Separation** — chain / fork / collider; block every path to make X ⫫ Y.
 6. **The Backdoor Criterion** — pick an adjustment set; regression recovers the truth or doesn't.
+7. **Bad Controls & Collider Bias** — conditioning on a collider/mediator/descendant *creates* bias.
+8. **The Front-Door Criterion** — identify X→Y even with an *unobserved* confounder, via a full mediator.
+9. **do-Calculus & Identification** — the three rules turn `P(Y|do(X))` into a formula — or prove none exists.
+10. **Partial Identification & Bounds** — trap the effect in an interval; assumptions tighten it (Manski).
 
-**Identification**
-7. **Randomization** — coin-flip assignment balances a hidden confounder; build the sampling distribution.
-8. **Adjustment & Stratification** — stratify to dissolve apparent bias.
-9. **Propensity Scores** — collapse many covariates to one axis; match by threads.
+**Estimating Effects**
+11. **Randomization** — a coin flip balances every hidden trait; build the sampling distribution.
+12. **Adjustment & Stratification** — stratify/standardize to dissolve apparent bias.
+13. **Propensity Scores** — collapse many covariates to one balancing score; match by threads.
+14. **Doubly-Robust Estimation** — AIPW / influence function; right if *either* model is, with honest CIs.
+15. **Sensitivity Analysis** — how strong a hidden confounder would overturn the result (E-value, Rosenbaum, Cinelli–Hazlett).
+16. **Double Machine Learning** — Neyman-orthogonal residual-on-residual + cross-fitting kills regularization bias.
 
-**Quasi-experiments**
-10. **Instrumental Variables** — a "nudge" bypasses confounding; the Wald ratio as rise-over-run; weak-instrument blowup.
-11. **Regression Discontinuity** — zoom into the cutoff; read the jump.
-12. **Difference-in-Differences** — the parallel-trends counterfactual as a ghost line.
+**Heterogeneous Effects & Policy**
+17. **Neural Treatment Effects** — a TARNet/CFR representation balances treated & control, dropping PEHE.
+18. **CATE & Meta-Learners** — S / T / X-learners turn any regressor into a personalized-effect estimator.
+19. **Policy Learning** — learn *who to treat* (`τ̂(x) > cost`), scored against the oracle's regret.
 
-**Counterfactuals**
-13. **Counterfactuals & the SCM** — abduction → action → prediction; graph surgery with scissors.
+**Quasi-Experiments**
+20. **Instrumental Variables** — a "nudge" bypasses confounding; the Wald ratio as rise-over-run.
+21. **Regression Discontinuity** — zoom into the cutoff; read the jump.
+22. **Difference-in-Differences** — the parallel-trends counterfactual as a ghost line.
+23. **Synthetic Control** — build a weighted "twin" from untreated donors; the post-gap is the effect.
+24. **Staggered DiD & the TWFE Trap** — already-treated units sneak in as controls (Goodman-Bacon).
 
-**Causal ML & Neural Nets** (live in-browser training via `lib/nn.js`)
-14. **Neural Causal Discovery** — watch a DAG crystallize from data under a differentiable acyclicity constraint; toggle the original **NOTEARS** h(W)=tr(e^{W∘W})−d (2018) vs the faster **DAGMA** log-det form (2022).
-15. **Neural Treatment Effects** — a TARNet/CFR representation network; the treated & control clouds *balance* as it trains, dropping counterfactual error (PEHE).
-16. **Double Machine Learning** — Neyman-orthogonal residual-on-residual + cross-fitting kills the regularization bias of naive ML plug-in.
+**Counterfactuals & Longitudinal**
+25. **Counterfactuals & the SCM** — abduction → action → prediction; graph surgery with scissors.
+26. **Time-Varying Treatment (g-methods)** — under treatment–confounder feedback, only g-formula / IPTW are right.
+27. **Mediation** — split a total effect into the part *through* a mediator vs *around* it.
+28. **Interference & Spillovers** — when treatment spills onto others, SUTVA breaks; recover direct + spillover.
+
+**Causal Discovery**
+29. **Neural Causal Discovery** — a DAG crystallizes under a differentiable acyclicity constraint; **NOTEARS** (2018) vs **DAGMA** (2022).
+30. **Constraint-Based Discovery (PC)** — delete edges by conditional-independence tests, then orient → a CPDAG.
+31. **LLMs & Causal Reasoning** — Corr2Cause: correlation fixes causation only up to the Markov-equivalence class. *Jin et al., ICLR 2024.*
 
 **Causal Reinforcement Learning**
-17. **Causal Bandits** — exploit a known intervention graph + propensities to cut regret far below structure-blind UCB/Thompson.
-18. **Off-Policy Evaluation** — IS/WIS/DR are unbiased only without hidden confounding; crank the confounder and watch every estimator drift off the truth.
-19. **Counterfactual Credit** — a counterfactual baseline (shared exogenous noise) slashes policy-gradient variance without bias.
+32. **Causal Bandits** — exploit a known intervention graph + propensities to cut regret.
+33. **Off-Policy Evaluation** — IS/WIS/DR unbiased only without hidden confounding.
+34. **Counterfactual Credit** — a shared-noise counterfactual baseline slashes policy-gradient variance.
 
-**Frontier · 2021–2026** (the recent state of the art)
-20. **Causal Representation Learning** — recover latent causal factors from entangled high-dimensional observations; interventions (not more data) grant identifiability. *Schölkopf et al. 2021; Locatello et al. 2019; CITRIS/iCITRIS 2022; score-based CRL, JMLR 2025.*
-21. **LLMs & Causal Reasoning** — the Corr2Cause task: correlation fixes causation only up to the Markov-equivalence class; edit a DAG and watch the indistinguishable alternatives (and what an over-confident LLM gets wrong). *Jin et al. Corr2Cause, ICLR 2024; CLadder, NeurIPS 2023; Verma & Pearl 1990.*
-22. **Causal Foundation Models** — a Prior-Data Fitted Network pre-trained on a prior of synthetic SCMs estimates treatment effects on a *new* dataset in a single forward pass, no per-dataset retraining. *PFNs, ICLR 2022; TabPFN, Nature 2025; **CausalPFN (2025)**; **CausalFM, ICLR 2026.***
+**Frontier · 2021–2026**
+35. **Causal Representation Learning** — recover latent causal factors; interventions grant identifiability. *Schölkopf 2021; Locatello 2019.*
+36. **Causal Foundation Models** — a Prior-Data Fitted Network estimates effects on a new dataset in one forward pass. *CausalPFN (2025); CausalFM (ICLR 2026).*
 
-**Identification · Advanced**
-23. **The Front-Door Criterion** — identify X→Y even with an *unobserved* confounder, by routing through a fully-mediating measured variable.
-24. **do-Calculus & Identification** — the three rules rewrite `P(Y|do(X))` into a do-free formula — or prove no formula exists (the bow arc).
-25. **Partial Identification & Bounds** — when a point estimate isn't identified, the data still trap the effect in an interval; assumptions tighten it (Manski).
+**Case Study**
+37. **Ghost Games — Crowds & Home Advantage** — COVID emptied the stadiums (crowd on→off→on); apply the whole toolkit to a real football dataset to show the crowd *causes* part of home advantage — partly through referee bias. *football-data.co.uk, 2018–22.*
 
-**Inference & Efficiency**
-26. **Doubly-Robust Estimation** — AIPW = the efficient influence function; consistent if *either* the outcome or the propensity model is right, with honest CIs.
-27. **Sensitivity Analysis** — how strong must a hidden confounder be to overturn the result? E-values, Rosenbaum bounds, Cinelli–Hazlett.
-
-**Heterogeneity & Policy**
-28. **CATE & Meta-Learners** — S / T / X-learners turn any regressor into a personalized-effect estimator and disagree in revealing ways (scored by PEHE).
-29. **Policy Learning** — learn *who to treat* (`τ̂(x) > cost`) and score the welfare against the oracle's regret.
-
-**Longitudinal & Mediation**
-30. **Time-Varying Treatment (g-methods)** — under treatment–confounder feedback, plain adjustment is biased *both ways*; only the g-formula / IPTW are right.
-31. **Mediation** — split a total effect into the part flowing *through* a mediator (indirect) and the part going *around* it (direct).
-32. **Interference & Spillovers** — when one unit's treatment spills onto others, SUTVA breaks; recover direct + spillover effects via an exposure mapping.
-
-**Panel · Advanced**
-33. **Synthetic Control** — build a weighted "twin" of the treated unit from untreated donors; the post-treatment gap is the effect.
-34. **Staggered DiD & the TWFE Trap** — with staggered adoption, two-way fixed effects secretly uses already-treated units as controls (Goodman-Bacon).
-35. **Constraint-Based Discovery (PC)** — delete edges by conditional-independence tests, then orient v-structures + Meek rules → a CPDAG.
-
-**Pitfalls & Mastery**
-36. **Bad Controls & Collider Bias** — adjusting for a collider, mediator, or descendant of treatment *creates* bias; learn good controls from poison ones.
-37. **Method Selection (Capstone)** — match the identification strategy to the problem's structure and defend its assumptions.
+**Capstone**
+38. **Method Selection** — match the identification strategy to the problem's structure and defend its assumptions.
 
 ## Real datasets — every interactive runs on real public data
 
@@ -140,6 +137,7 @@ rows. A green provenance badge in each module names the dataset and citation.
 | Staggered DiD | Castle-Doctrine / stand-your-ground laws | Cheng & Hoekstra 2013 |
 | Constraint-Based Discovery | Sachs protein network | Spirtes, Glymour & Scheines 2000 |
 | Bad Controls & Collider Bias | Card schooling & wages | Cinelli, Forney & Pearl 2022 |
+| Ghost Games (Case Study) | 7,203 top-5-league football matches, 2018–22 (crowd on→off→on) | football-data.co.uk |
 | Method Selection (Capstone) | NSW, Card, Lee, Card-Krueger, Prop 99 | — |
 
 **Honest caveats.** Some quantities cannot exist in any real dataset — and the
@@ -202,7 +200,7 @@ To add a lesson: drop a file in `modules/`, add one line to the `MODULES` array 
 ## Test
 
 ```bash
-node test/smoke.mjs    # mounts all 37 modules headless, runs animation frames, asserts no crash
+node test/smoke.mjs    # mounts all 38 modules headless, runs animation frames, asserts no crash
 node test/nn.test.mjs  # gradient-checks the neural-net library
-node test/quiz.test.mjs # validates every quiz/<id>.js schema (185 questions)
+node test/quiz.test.mjs # validates every quiz/<id>.js schema (190 questions)
 ```
