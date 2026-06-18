@@ -126,7 +126,7 @@ const MODULES = [
   // Causal Reinforcement Learning
   "bandits", "ope", "credit",
   // Frontier 2021-2026
-  "crl", "corr2cause", "pfn",
+  "crl", "corr2cause", "pfn", "cdfm",
   // Mastery layer (advanced)
   "frontdoor", "docalc", "bounds", "aipw", "sensitivity", "metalearners", "policy",
   "gmethods", "mediation", "interference", "synth", "staggered", "pcalg",

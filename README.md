@@ -24,11 +24,11 @@ not `file://`, so use one of the servers above rather than opening the file.
 
 Every section opens with a plain-words **"In plain words"** intuition card and
 closes with an interactive **5-question quiz** (instant feedback, explanations,
-scoring) — 41 sections, 205 questions in all (incl. four novel case studies).
+scoring) — 42 sections, 210 questions in all (incl. four novel case studies).
 
 ## The curriculum
 
-**41 modules**, each a self-contained interactive toy with a built-in challenge,
+**42 modules**, each a self-contained interactive toy with a built-in challenge,
 an ELI5 intro, and a quiz:
 
 Ordered as one conceptual spine: foundations → graphs & identification → estimating effects → heterogeneity & policy → quasi-experiments → counterfactuals & longitudinal → discovery → RL → frontier → case study → capstone.
@@ -86,15 +86,16 @@ Ordered as one conceptual spine: foundations → graphs & identification → est
 **Frontier · 2021–2026**
 35. **Causal Representation Learning** — recover latent causal factors; interventions grant identifiability. *Schölkopf 2021; Locatello 2019.*
 36. **Causal Foundation Models** — a Prior-Data Fitted Network estimates effects on a new dataset in one forward pass. *CausalPFN (2025); CausalFM (ICLR 2026).*
+37. **Zero-Shot Causal Discovery** — pre-train one model on a prior of synthetic causal worlds so it learns the *skill* of discovery, then infer the causal graph of a brand-new dataset (and a real Sachs subgraph it never saw) in a single forward pass — the discovery sibling of causal foundation models. *AVICI 2022; Sea 2024; Zero-Shot Causal Models / FiP, TMLR 2025.*
 
 **Case Study**
-37. **Ghost Games — Crowds & Home Advantage** — COVID emptied the stadiums (crowd on→off→on); apply the whole toolkit to a real football dataset to show the crowd *causes* part of home advantage — partly through referee bias. *football-data.co.uk, 2018–22.*
-38. **The Hit Song Formula** — run causal *discovery* on 6,000 songs' audio features: a clean cause-and-effect network appears among the sound (energy ↔ loudness ↔ acousticness), but popularity has *no* strong measured cause — the real driver isn't in the data. *Spotify audio features via TidyTuesday.*
-39. **Decoding the Market** — discover the causal structure of 20 stocks' daily returns: raw, everything correlates because the *market* is a common cause; strip it out and the web collapses to real sector clusters (Energy, Financials) — while day-ahead prediction stays elusive (near-efficient markets). *Yahoo Finance, 2024–26.*
-40. **Driver or Car? — Causal F1** — pole position strongly predicts winning, but the *car* confounds both; control for the constructor (0.66 → 0.43) and a teammate head-to-head (same car) isolates pure driver skill — the under-modeled edge for thin F1 betting markets. *Ergast / jolpi.ca, 2023–25.*
+38. **Ghost Games — Crowds & Home Advantage** — COVID emptied the stadiums (crowd on→off→on); apply the whole toolkit to a real football dataset to show the crowd *causes* part of home advantage — partly through referee bias. *football-data.co.uk, 2018–22.*
+39. **The Hit Song Formula** — run causal *discovery* on 6,000 songs' audio features: a clean cause-and-effect network appears among the sound (energy ↔ loudness ↔ acousticness), but popularity has *no* strong measured cause — the real driver isn't in the data. *Spotify audio features via TidyTuesday.*
+40. **Decoding the Market** — discover the causal structure of 20 stocks' daily returns: raw, everything correlates because the *market* is a common cause; strip it out and the web collapses to real sector clusters (Energy, Financials) — while day-ahead prediction stays elusive (near-efficient markets). *Yahoo Finance, 2024–26.*
+41. **Driver or Car? — Causal F1** — pole position strongly predicts winning, but the *car* confounds both; control for the constructor (0.66 → 0.43) and a teammate head-to-head (same car) isolates pure driver skill — the under-modeled edge for thin F1 betting markets. *Ergast / jolpi.ca, 2023–25.*
 
 **Capstone**
-41. **Method Selection** — match the identification strategy to the problem's structure and defend its assumptions.
+42. **Method Selection** — match the identification strategy to the problem's structure and defend its assumptions.
 
 ## Real datasets — every interactive runs on real public data
 
@@ -126,6 +127,7 @@ rows. A green provenance badge in each module names the dataset and citation.
 | Causal Representation Learning | Sachs proteins as latent signals | Sachs et al. 2005 |
 | LLMs & Causal Reasoning | Sachs consensus subgraph + real correlations | Sachs et al. 2005 |
 | Causal Foundation Models | IHDP real test set (synthetic prior, by design) | Hill 2011 |
+| Zero-Shot Causal Discovery | Sachs subgraph as the real zero-shot test (synthetic prior) | Sachs et al. 2005; AVICI/Sea/FiP |
 | Front-Door Criterion | 401(k) eligibility → participation → assets | Poterba-Venti-Wise |
 | do-Calculus & Identification | 401(k) (identifiable graphs computed on real data) | Pearl 1995 |
 | Partial Identification & Bounds | NSW (true ATE lies inside the bounds) | LaLonde 1986 |
@@ -206,7 +208,7 @@ To add a lesson: drop a file in `modules/`, add one line to the `MODULES` array 
 ## Test
 
 ```bash
-node test/smoke.mjs    # mounts all 41 modules headless, runs animation frames, asserts no crash
+node test/smoke.mjs    # mounts all 42 modules headless, runs animation frames, asserts no crash
 node test/nn.test.mjs  # gradient-checks the neural-net library
-node test/quiz.test.mjs # validates every quiz/<id>.js schema (205 questions)
+node test/quiz.test.mjs # validates every quiz/<id>.js schema (210 questions)
 ```

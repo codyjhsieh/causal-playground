@@ -130,6 +130,9 @@ const MODULES = [
   { group: "Frontier · 2021–2026", id: "pfn", title: "Causal Foundation Models",
     eli5: "Instead of training a fresh model for each new dataset, train <strong>one huge model on millions of pretend worlds</strong>. It learns the <em>skill</em> of causal inference itself, so on a brand-new dataset it answers in a single shot — like a doctor who’s already seen everything.",
     load: () => import("./modules/pfn.js") },
+  { group: "Frontier · 2021–2026", id: "cdfm", title: "Zero-Shot Causal Discovery",
+    eli5: "Finding a cause-and-effect map normally means running a slow algorithm from scratch on every dataset. The 2026 trick: pre-train <strong>one model on millions of pretend causal worlds</strong> until it learns the <em>skill</em> of discovery itself — then hand it a brand-new dataset (even real biology it’s never seen) and it sketches the whole graph in a single glance, no algorithm, no waiting.",
+    load: () => import("./modules/cdfm.js") },
 
   { group: "Case Study", id: "ghostgames", title: "Ghost Games — Crowds & Home Advantage",
     eli5: "Home teams win more — everyone knows it, nobody fully knows why. Then COVID <strong>emptied the stadiums</strong>, switching the crowd off and later back on: a rare natural on/off/on experiment. Watch home advantage shrink when the fans vanish and rebound when they return — and catch the referees quietly favoring the home side only when a crowd is roaring.",
