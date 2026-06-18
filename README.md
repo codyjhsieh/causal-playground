@@ -24,11 +24,11 @@ not `file://`, so use one of the servers above rather than opening the file.
 
 Every section opens with a plain-words **"In plain words"** intuition card and
 closes with an interactive **5-question quiz** (instant feedback, explanations,
-scoring) — 40 sections, 200 questions in all (incl. three novel case studies).
+scoring) — 41 sections, 205 questions in all (incl. four novel case studies).
 
 ## The curriculum
 
-**40 modules**, each a self-contained interactive toy with a built-in challenge,
+**41 modules**, each a self-contained interactive toy with a built-in challenge,
 an ELI5 intro, and a quiz:
 
 Ordered as one conceptual spine: foundations → graphs & identification → estimating effects → heterogeneity & policy → quasi-experiments → counterfactuals & longitudinal → discovery → RL → frontier → case study → capstone.
@@ -91,9 +91,10 @@ Ordered as one conceptual spine: foundations → graphs & identification → est
 37. **Ghost Games — Crowds & Home Advantage** — COVID emptied the stadiums (crowd on→off→on); apply the whole toolkit to a real football dataset to show the crowd *causes* part of home advantage — partly through referee bias. *football-data.co.uk, 2018–22.*
 38. **The Hit Song Formula** — run causal *discovery* on 6,000 songs' audio features: a clean cause-and-effect network appears among the sound (energy ↔ loudness ↔ acousticness), but popularity has *no* strong measured cause — the real driver isn't in the data. *Spotify audio features via TidyTuesday.*
 39. **Decoding the Market** — discover the causal structure of 20 stocks' daily returns: raw, everything correlates because the *market* is a common cause; strip it out and the web collapses to real sector clusters (Energy, Financials) — while day-ahead prediction stays elusive (near-efficient markets). *Yahoo Finance, 2024–26.*
+40. **Driver or Car? — Causal F1** — pole position strongly predicts winning, but the *car* confounds both; control for the constructor (0.66 → 0.43) and a teammate head-to-head (same car) isolates pure driver skill — the under-modeled edge for thin F1 betting markets. *Ergast / jolpi.ca, 2023–25.*
 
 **Capstone**
-40. **Method Selection** — match the identification strategy to the problem's structure and defend its assumptions.
+41. **Method Selection** — match the identification strategy to the problem's structure and defend its assumptions.
 
 ## Real datasets — every interactive runs on real public data
 
@@ -142,6 +143,7 @@ rows. A green provenance badge in each module names the dataset and citation.
 | Ghost Games (Case Study) | 7,203 top-5-league football matches, 2018–22 (crowd on→off→on) | football-data.co.uk |
 | The Hit Song Formula (Case Study) | 6,000 Spotify tracks — audio features & popularity (causal discovery) | Spotify API via TidyTuesday |
 | Decoding the Market (Case Study) | 20 large-cap stocks + S&P 500, daily returns 2024–26 (causal discovery) | Yahoo Finance |
+| Driver or Car? (Case Study) | 1,398 F1 race entries, 2023–25 (grid/finish/constructor; driver-vs-car) | Ergast / jolpi.ca API |
 | Method Selection (Capstone) | NSW, Card, Lee, Card-Krueger, Prop 99 | — |
 
 **Honest caveats.** Some quantities cannot exist in any real dataset — and the
@@ -204,7 +206,7 @@ To add a lesson: drop a file in `modules/`, add one line to the `MODULES` array 
 ## Test
 
 ```bash
-node test/smoke.mjs    # mounts all 40 modules headless, runs animation frames, asserts no crash
+node test/smoke.mjs    # mounts all 41 modules headless, runs animation frames, asserts no crash
 node test/nn.test.mjs  # gradient-checks the neural-net library
-node test/quiz.test.mjs # validates every quiz/<id>.js schema (200 questions)
+node test/quiz.test.mjs # validates every quiz/<id>.js schema (205 questions)
 ```

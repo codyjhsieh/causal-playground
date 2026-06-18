@@ -140,6 +140,9 @@ const MODULES = [
   { group: "Case Study", id: "marketgraph", title: "Decoding the Market",
     eli5: "Stocks seem to move as one — when the market’s up, almost everything’s up. But is that real connection, or <strong>one hidden hand</strong> pulling all the strings? Strip “the market” out of 20 big stocks and watch the tangled web collapse — leaving the true cause-and-effect clusters (oil with oil, banks with banks) and a hard truth about why nobody can call tomorrow’s move.",
     load: () => import("./modules/marketgraph.js") },
+  { group: "Case Study", id: "f1", title: "Driver or Car? — Causal F1",
+    eli5: "In Formula 1, starting on pole almost always means winning — so is grid position the secret? Not quite. The same blazing-fast <strong>car</strong> that earns pole also wins the race, so the machine is pulling the strings. Strip the car away and the real story appears: which drivers truly beat their machinery (the same Red Bull that wins with Verstappen struggles with his teammate), and the handful of circuits where where you start actually decides where you finish.",
+    load: () => import("./modules/f1.js") },
 
   { group: "Capstone", id: "capstone", title: "Method Selection (Capstone)",
     eli5: "Real problems don’t come labeled “use IV.” Given a messy dataset and a question, the master move is <strong>choosing the right tool</strong>, defending its assumptions, and saying honestly what you still don’t know.",
