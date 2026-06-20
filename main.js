@@ -152,6 +152,54 @@ const MODULES = [
     load: () => import("./modules/capstone.js") },
 ];
 
+// A one-line, hands-on "Try it" instruction per module — what to manipulate and
+// what to watch. Grounded in each module's real controls so the interactive is
+// self-explanatory the moment it loads. Injected after the plain-words card.
+const HOWTO = {
+  ladder: `Click a rung — Seeing, Doing, Imagining — to move the climber and reveal that rung's answer on the LaLonde data.`,
+  simpson: `Toggle “Split by department” and watch the pooled gender bars fan into six dept pairs as the within-group gap flips.`,
+  "two-worlds": `Toggle “God mode” to reveal each unit's counterfactual ghost dot, then step through people with “next unit.”`,
+  confounding: `Click the income ($) node to condition on it — watch the backdoor flow stop and the correlation collapse to ≈ 0.`,
+  dsep: `Pick X and Y, then click nodes to build the conditioning set Z — watch paths open or block and the partial correlation update.`,
+  backdoor: `Click covariate nodes (try re74, re75) to add them to Z — watch your estimate climb toward the +$1,794 benchmark.`,
+  badcontrols: `Drag controls into the adjustment set — confounders help, but colliders and mediators shove the bias-o-meter out of the band.`,
+  frontdoor: `Toggle “Reveal U (income) edges,” then hit “animate two-stage” — watch β₁×β₂ match the backdoor truth while naïve overstates.`,
+  docalc: `Pick a graph from the gallery, step “next →,” then hit “✂ Graph surgery (do(X))” — watch the do() get rewritten away or fail.`,
+  bounds: `Flip on the MTR, MTS, and “Randomization known (RCT)” toggles — watch the interval tighten until it excludes zero.`,
+  randomization: `Switch “Coin flip (RCT)” to “Self-selection” and click “run 200” — watch the histogram shift off the true ATE.`,
+  adjustment: `Toggle “Stratify by department” — watch the dots sort into six columns and the crude −14pp gap shrink to ≈ 0.`,
+  propensity: `Click “Collapse to propensity axis,” then “Match on propensity score” — watch matched pairs pull the estimate to the benchmark.`,
+  aipw: `Toggle “Outcome model” or “Propensity model” off — the AIPW dot stays on the true-ATE line while a single method drifts.`,
+  sensitivity: `Drag the two partial-R² sliders — watch the gold dot slide toward the red “killer” curve where the effect would vanish.`,
+  dml: `Toggle “Cross-fitting” off then on and click “run 80 bootstraps” — watch the estimate snap back onto the $9–14k band.`,
+  cfr: `Raise the balancing-strength α slider above 0 — watch the treated and control clouds merge as MMD and PEHE drop.`,
+  metalearners: `Toggle the S / T / X learners on and off — compare their CATE curves against the gold truth and see which wins lowest PEHE.`,
+  policy: `Drag the treatment-cost c slider — watch the treat / don't-treat threshold slide and the policy's value climb toward the oracle.`,
+  iv: `Drag the sample-size n slider down — watch the IV estimates fan out wildly while OLS stays tight but biased.`,
+  rdd: `Drag the bandwidth h slider toward the cutoff — watch the local fits zoom in and the gold bracket report the jump.`,
+  did: `Drag the “assumed parallel trend” slider and toggle “Show counterfactual” — watch the gold DiD bracket and the effect move.`,
+  synth: `Click “Fit synthetic control” — watch the donor weights rearrange until the twin tracks California, then the gap open after 2000.`,
+  staggered: `Toggle off “Include forbidden comparisons” — watch the estimate jump from biased TWFE toward the clean ATT.`,
+  scm: `Click “Next step” through Abduction → Action → Prediction — watch the scissors cut A→E and the counterfactual wage diverge.`,
+  gmethods: `Crank the “feedback strength” slider up — Naïve and Adjust-for-L1 drift off while g-formula and IPTW stay locked on truth.`,
+  mediation: `Toggle “Adjust for baseline covariates” — watch the path widths and the direct/indirect bar re-split the total effect.`,
+  interference: `Drag the “village treatment saturation” slider to 100% — watch the glow spread and the total effect exceed the naïve ITT.`,
+  notears: `Press Play — watch the weight heatmap crystallize into the protein DAG as h(W)→0; raise λ₁ to prune false edges.`,
+  pcalg: `Drag the α slider, then press Play — step through the independence tests deleting edges and orienting arrows as SHD shrinks.`,
+  corr2cause: `Click an edge to flip its direction — watch the equivalence-class gallery and the compelled-vs-reversible CPDAG update.`,
+  bandits: `Press play — watch the green causal-bandit regret flatten below UCB1 and Thompson; drag Difficulty to change the gap.`,
+  ope: `Drag the hidden-confounding slider up, then click “run 200” — watch every estimator's histogram drift off the true value.`,
+  credit: `Crank the σ_luck noise up and run rollouts — the counterfactual estimate stays tight while REINFORCE's spreads wide.`,
+  crl: `Toggle “Intervene on PKA” and “Intervene on P38” — watch the recovered axes snap into place as the MCC score climbs to ≈ 1.`,
+  pfn: `Click “Pre-train the foundation model,” then “Resample IHDP” — the PFN answer snaps in instantly vs the baseline's slow training.`,
+  cdfm: `Click “Pre-train the discovery model,” then “Run Sachs zero-shot,” and drag the sample-size n slider — watch the graph and SHD vs PC.`,
+  ghostgames: `Click the “referees” tab to watch home card-bias collapse from crowd to empty, then switch the league and outcome filters.`,
+  hitsong: `Open “Discover audio DNA” and drag the “edge threshold α” slider — new cause-effect edges appear; drag nodes to untangle the web.`,
+  marketgraph: `Flip the “Remove the market” toggle — watch the average correlation collapse and the true sector blocks (oil, banks) emerge.`,
+  f1: `Click the Car node (or flip “Control for the car”) — watch corr(grid, finish) shrink from 0.66 to 0.43 as pure driver skill appears.`,
+  capstone: `Read each case, then click one of the five method pills (RCT, IV, RDD, DiD, Synthetic Control) — the reveal marks it right or wrong.`,
+};
+
 const app = document.getElementById("app");
 const nav = document.getElementById("nav");
 const main = document.getElementById("main");
@@ -200,6 +248,26 @@ function injectEli5(text) {
   else (main.querySelector(".lesson") || main).prepend(card);
 }
 
+// A hands-on "Try it" pill injected just below the plain-words card, telling the
+// reader exactly what to manipulate and what to watch — so every interactive is
+// self-explanatory on arrival. Placed after the eli5 card, before the diagram.
+function injectHowto(id) {
+  const text = HOWTO[id];
+  if (!text) return;
+  const pill = h("div", { class: "howto" }, [
+    h("span", { class: "howto-icon", text: "👆" }),
+    h("span", { class: "howto-label", text: "Try it" }),
+    h("span", { class: "howto-text", text }),
+  ]);
+  const eli5 = main.querySelector(".eli5");
+  if (eli5) eli5.insertAdjacentElement("afterend", pill);
+  else {
+    const head = main.querySelector(".lesson-head");
+    if (head) head.insertAdjacentElement("afterend", pill);
+    else (main.querySelector(".lesson") || main).prepend(pill);
+  }
+}
+
 // Lazy-load this module's question set and append an interactive quiz at the
 // bottom of the lesson. Guarded so a slow import can't attach to a lesson the
 // user has already navigated away from.
@@ -231,6 +299,7 @@ async function navigate(id) {
     clear(main);
     currentCleanup = mod.mount(main) || null;
     injectEli5(m.eli5);
+    injectHowto(m.id);
     main.scrollTop = 0;
     injectQuiz(m.id);
   } catch (err) {
