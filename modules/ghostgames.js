@@ -267,14 +267,19 @@ export function mount(root) {
   // ── Caption ────────────────────────────────────────────────────────────────
   caption.innerHTML =
     "Data: <strong>football-data.co.uk</strong>; top-5 European leagues, 2018–19 to 2021–22 (7,203 matches). " +
-    "COVID quarantine rules forced empty-stadium play in 2020–21, creating an <em>on→off→on</em> natural experiment. " +
-    "Home PPG: crowd present = " + crowdPPG.toFixed(3) + ", empty = " + emptyPPG.toFixed(3) + ". " +
-    "Referee card bias (away minus home weighted cards) collapses from " +
-    crowdBias.toFixed(3) + " to " + emptyBias.toFixed(3) + " without a crowd — " +
-    "consistent with social pressure on officials being a mechanism. " +
-    "Prior academic work by Pettersson-Lidbom &amp; Priks (2010) and Scoppa (2021) aligns with these findings; " +
-    "the on→off→on pattern and league heterogeneity are verifiable here. " +
-    "<em>Caution:</em> the empty season also coincided with schedule compression and summer play — a one-time confound cannot be fully ruled out, but the reversal pattern and referee mechanism are difficult for a single-shot confound to explain.";
+    "COVID rules forced empty-stadium play in 2020–21, creating an <em>on→off→on</em> natural experiment — " +
+    "same teams, same leagues, same pitches; the crowd switched off, then back on. " +
+    "<strong>Home advantage shrinks when fans vanish.</strong> Open the <em>Crowd effect</em> panel: " +
+    "home points-per-game drops from " + crowdPPG.toFixed(3) + " with a crowd to " + emptyPPG.toFixed(3) + " without one, " +
+    "then rebounds when crowds return. " +
+    "<strong>The mechanism is the referees.</strong> Card bias = (cards shown to away) − (cards shown to home), with reds counted as 2× yellows; " +
+    "<em>positive means the away team gets more cards — i.e., refs are favoring home</em>. " +
+    "Open the <em>The referees</em> tab: card bias collapses from " +
+    crowdBias.toFixed(3) + " (clear pro-home tilt) to " + emptyBias.toFixed(3) + " (essentially zero) when stadiums empty. " +
+    "Click <em>By league</em> to see the same drop in all five leagues, then <em>Verdict</em> for the summary. " +
+    "Prior academic work by Pettersson-Lidbom &amp; Priks (2010) and Scoppa (2021) aligns with these findings. " +
+    "<em>Caution:</em> the empty season also coincided with schedule compression and summer play — a one-time confound cannot be fully ruled out, " +
+    "but a single shock would struggle to produce the per-league referee reversal seen here.";
 
   root.appendChild(layout);
 

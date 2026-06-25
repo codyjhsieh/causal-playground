@@ -312,21 +312,24 @@ export function mount(root) {
   caption.innerHTML =
     "Data: <strong>Ergast / jolpi.ca F1 API, 2023–25</strong> " +
     "(3&nbsp;&times;&nbsp;~24 races, " + rows.length + " race entries). " +
-    "Raw correlation corr(grid,&nbsp;finish)&nbsp;=&nbsp;" + CORR_GF.toFixed(3) + " — " +
-    "pole strongly predicts victory. But the <em>constructor</em> is a " +
-    "<strong>confounder</strong>: a fast car qualifies well (corr(grid,&nbsp;car-strength)&nbsp;=&nbsp;" +
-    CORR_GCS.toFixed(3) + ") <em>and</em> finishes well. " +
-    "Controlling for the car, the partial correlation shrinks to " + PARTIAL_GF_CS.toFixed(3) + " — " +
-    "grid still has a real direct effect (track position limits overtaking), " +
-    "but much of the raw link was the car. " +
-    "Driver <em>overperformance</em> (residual finish after removing constructor strength) identifies " +
-    "who beats their machinery: " +
+    "Throughout, <em>grid</em> = starting position and <em>finish</em> = finishing position — " +
+    "<strong>lower numbers are better</strong> (P1 is the win). " +
+    "<em>Car strength</em> means the constructor's average finishing position across the season — small number = fast car. " +
+    "<strong>Pole strongly predicts victory</strong>: raw corr(grid,&nbsp;finish)&nbsp;=&nbsp;" + CORR_GF.toFixed(3) + ". " +
+    "But open <em>Car is the confounder</em> and click the <strong>Car</strong> node — " +
+    "a fast car qualifies well (corr(grid,&nbsp;car-strength)&nbsp;=&nbsp;" + CORR_GCS.toFixed(3) + ") <em>and</em> finishes well, " +
+    "so the same machine produces both ends of the original correlation. " +
+    "Flip <em>Control for the car</em>: the partial correlation shrinks to " + PARTIAL_GF_CS.toFixed(3) + " — " +
+    "grid still has a real direct effect (track position limits overtaking), but much of the raw link was the car. " +
+    "Then <em>Driver vs Car</em> shows <strong>driver overperformance</strong> = (actual finish) − (finish predicted by car strength); " +
+    "<em>negative = finished better than the car would predict = beats the machinery</em>. " +
+    "Top three: " +
     DRIVER_OVP.slice(0, 3).map(d => `<strong>${d.driver}</strong>&nbsp;(${d.ovp.toFixed(2)})`).join(", ") + ". " +
-    "The cleanest driver-skill estimate is the <em>teammate head-to-head</em>: " +
-    "VER&nbsp;vs&nbsp;PER in the same Red Bull car. " +
-    "Circuit heterogeneity matters for betting: street circuits like Monaco make starting position " +
-    "nearly deterministic; power tracks like Monza enable overtaking. " +
-    "<em>Caution:</em> markets price in driver quality; this structure illuminates potential mispricings " +
+    "The cleanest driver-skill estimate, in <em>Teammates</em>, is the <strong>head-to-head</strong>: " +
+    "two drivers in the <em>same</em> car (VER vs PER in the Red Bull) — the car is held fixed, so the gap is pure driver. " +
+    "Finally <em>Where grid matters</em>: street circuits like Monaco make starting position nearly deterministic; " +
+    "power tracks like Monza enable overtaking. " +
+    "<em>Caution:</em> markets already price in driver quality; this structure illuminates potential mispricings " +
     "in head-to-head driver markets, but no guaranteed arbitrage is claimed. " +
     "Fresh causal-inference analysis on public data; not affiliated with F1 or any betting entity.";
 

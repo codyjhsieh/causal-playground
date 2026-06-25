@@ -291,19 +291,22 @@ export function mount(root) {
   caption.innerHTML =
     "Data: <strong>Spotify Web API via TidyTuesday (rfordatascience, 2020)</strong>, " +
     "n&nbsp;=&nbsp;" + N + " tracks across 6 genres. " +
-    "We apply a <em>Gaussian graphical model</em> (precision-matrix partial correlations) " +
-    "to discover the conditional-independence skeleton among 10 audio features, then ask " +
-    "whether popularity fits in. Answer: audio features form a tight cluster " +
-    "(energy–loudness–acousticness <em>r</em><sub>partial</sub>&nbsp;≈&nbsp;" +
-    energyLoudPC.toFixed(2) + " / " + energyAcousticPC.toFixed(2) + ") " +
-    "while the strongest raw correlation any feature has with popularity is only " +
-    "|r|&nbsp;=&nbsp;" + maxAbsPopCorr.toFixed(3) + ". " +
-    "The genre-confounding of the loudness–popularity link (stratifying by genre changes the sign) " +
-    "illustrates that even the tiny signal is partly spurious. " +
-    "The honest conclusion: causal discovery is only as good as your variable set — " +
-    "the true hit-making causes (artist fame, algorithmic placement, marketing spend) " +
-    "live outside this spreadsheet, and no amount of additional audio data will uncover them. " +
-    "This is a fresh causal-inference analysis; explore the panels to build your own interpretation.";
+    "Open the <em>Discover audio DNA</em> tab to run <strong>causal discovery on partial correlations</strong>: " +
+    "for each pair of features, compute their correlation <em>after controlling for every other feature</em>. " +
+    "A surviving link means a direct tie; a link that vanishes was a chain through something else. " +
+    "Drag the <em>edge threshold α</em> slider to set how strong a partial correlation must be to draw an edge — " +
+    "lower α reveals weaker links, higher α keeps only the strongest. " +
+    "<strong>Audio features cluster tightly.</strong> Energy ↔ loudness and energy ↔ acousticness have partial correlations " +
+    energyLoudPC.toFixed(2) + " and " + energyAcousticPC.toFixed(2) +
+    " (|partial r|&nbsp;&gt;&nbsp;0.5 is a strong direct link). " +
+    "<strong>Popularity floats off on its own.</strong> The strongest raw correlation any audio feature has with popularity is only " +
+    "|r|&nbsp;=&nbsp;" + maxAbsPopCorr.toFixed(3) + " — near the noise floor (|r|&nbsp;&lt;&nbsp;0.1 is essentially zero at this sample size). " +
+    "<strong>And even that tiny signal is partly spurious.</strong> Open the <em>Loudness illusion</em> tab: " +
+    "stratifying by genre <em>flips the sign</em> of the loudness–popularity correlation — " +
+    "loud rock tracks ≠ loud classical tracks; the raw link rode on genre as a confounder. " +
+    "Honest conclusion: causal discovery is only as good as your variable set. " +
+    "The real hit-making causes (artist fame, algorithmic placement, marketing spend) live outside this spreadsheet, " +
+    "and no amount of additional audio data will uncover them.";
 
   root.appendChild(layout);
 

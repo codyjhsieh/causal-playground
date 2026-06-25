@@ -311,20 +311,23 @@ export function mount(root) {
   // ── Caption ───────────────────────────────────────────────────────────────────
   caption.innerHTML =
     "Data: <strong>Yahoo Finance daily prices, 2024–26</strong> (500 trading days, 19 large-cap " +
-    "U.S. stocks + SPY). We apply causal-discovery logic to daily log returns: " +
-    "the raw pairwise correlation web is dense (avg r&nbsp;≈&nbsp;" + AVG_RAW_CORR.toFixed(2) + ") " +
-    "because the <em>overall market</em> is a <strong>common cause</strong> of every stock — " +
-    "a textbook confounder. Regressing each stock on SPY and correlating the residuals " +
-    "reveals the true conditional structure: average residual correlation collapses to " +
-    "≈&nbsp;" + AVG_RES_CORR.toFixed(2) + ". Within-sector blocks survive — " +
-    "<strong>Energy</strong> (XOM–CVX–COP, avg r&nbsp;≈&nbsp;" + ENERGY_RES_CORR.toFixed(2) + ") " +
-    "and <strong>Financials</strong> (JPM–BAC–GS, avg r&nbsp;≈&nbsp;" + FIN_RES_CORR.toFixed(2) + ") — " +
-    "while <strong>Technology dissolves</strong>: in 2024–26 the mega-cap tech stocks essentially " +
-    "<em>are</em> the market, so removing SPY removes their co-movement. " +
-    "Lag-1 cross-correlations hover near zero (avg |r|&nbsp;≈&nbsp;" + AVG_LAG_CORR.toFixed(3) + "), " +
-    "confirming near-efficient markets: contemporaneous structure is discoverable, " +
-    "day-ahead causal prediction is not — which is exactly why beating the market is hard. " +
-    "This is a fresh causal-inference analysis of public data; no trading edge is claimed.";
+    "U.S. stocks + SPY, the S&amp;P 500 ETF that stands in for \"the market\"). " +
+    "Open the <em>Hidden hand</em> panel and flip <em>Remove the market</em>. " +
+    "Under the hood this <strong>regresses each stock on SPY and correlates the residuals</strong> — " +
+    "i.e., subtracts the part of every stock's daily move that's just the market moving, then asks how the leftovers are related " +
+    "(the \"de-market\" toggle). " +
+    "<strong>Raw correlations are dense</strong> (avg r&nbsp;≈&nbsp;" + AVG_RAW_CORR.toFixed(2) + ", strongly positive) " +
+    "because the <em>overall market</em> is a <strong>common cause</strong> of every stock — a textbook confounder. " +
+    "<strong>After de-marketing, the average residual correlation collapses to ≈&nbsp;" + AVG_RES_CORR.toFixed(2) + "</strong> (essentially zero). " +
+    "Switch to <em>Real structure</em>: within-sector blocks survive — " +
+    "<strong>Energy</strong> (XOM, CVX, COP, avg residual r&nbsp;≈&nbsp;" + ENERGY_RES_CORR.toFixed(2) + ") " +
+    "and <strong>Financials</strong> (JPM, BAC, GS, avg r&nbsp;≈&nbsp;" + FIN_RES_CORR.toFixed(2) + ") — these are real co-movements beyond \"the market.\" " +
+    "<strong>Technology dissolves</strong>: in 2024–26, mega-cap tech (AAPL, MSFT, NVDA, GOOGL, META) essentially " +
+    "<em>is</em> the market — they dominate SPY's weighting, so removing SPY removes their co-movement. " +
+    "Finally, <em>Predict tomorrow?</em> shows <strong>lag-1 cross-correlations</strong> (today's residual in stock A vs. tomorrow's residual in stock B) " +
+    "hovering at avg |r|&nbsp;≈&nbsp;" + AVG_LAG_CORR.toFixed(3) + " — near zero, confirming near-efficient markets: " +
+    "contemporaneous structure is discoverable, day-ahead causal prediction is not. " +
+    "That's exactly why beating the market is hard. No trading edge is claimed.";
 
   root.appendChild(layout);
 
