@@ -133,6 +133,9 @@ const MODULES = [
   { group: "Frontier · 2021–2026", id: "cdfm", title: "Zero-Shot Causal Discovery",
     eli5: "Finding a cause-and-effect map normally means running a slow algorithm from scratch on every dataset. The 2026 trick: pre-train <strong>one model on millions of pretend causal worlds</strong> until it learns the <em>skill</em> of discovery itself — then hand it a brand-new dataset (even real biology it’s never seen) and it sketches the whole graph in a single glance, no algorithm, no waiting.",
     load: () => import("./modules/cdfm.js") },
+  { group: "Frontier · 2021–2026", id: "ncm", title: "Neural Causal Models",
+    eli5: "Give every variable its own little neural network, wired up to the cause-and-effect arrows of a diagram. Train it on plain data and — the surprise theorem — the <em>same</em> network answers all three rungs: what you <strong>see</strong>, what would happen if you <strong>did</strong> something, and what would have happened to one specific person if their treatment had been flipped. Theory meets architecture.",
+    load: () => import("./modules/ncm.js") },
 
   { group: "Case Study", id: "ghostgames", title: "Ghost Games — Crowds & Home Advantage",
     eli5: "Home teams win more — everyone knows it, nobody fully knows why. Then COVID <strong>emptied the stadiums</strong>, switching the crowd off and later back on: a rare natural on/off/on experiment. Watch home advantage shrink when the fans vanish and rebound when they return — and catch the referees quietly favoring the home side only when a crowd is roaring.",
@@ -193,6 +196,7 @@ const HOWTO = {
   crl: `Toggle “Intervene on PKA” and “Intervene on P38” — watch the recovered axes snap into place as the MCC score climbs to ≈ 1.`,
   pfn: `Click “Pre-train the foundation model,” then “Resample IHDP” — the PFN answer snaps in instantly vs the baseline's slow training.`,
   cdfm: `Click “Pre-train the discovery model,” then “Run Sachs zero-shot,” and drag the sample-size n slider — watch the graph and SHD vs PC.`,
+  ncm: `Watch the per-node MLPs train; then flip “Data mode” to Confounded — L1 diverges from L2 but the NCM still recovers the truth. Toggle “Hide re75” to break identifiability.`,
   ghostgames: `Click the “referees” tab to watch home card-bias collapse from crowd to empty, then switch the league and outcome filters.`,
   hitsong: `Open “Discover audio DNA” and drag the “edge threshold α” slider — new cause-effect edges appear; drag nodes to untangle the web.`,
   marketgraph: `Flip the “Remove the market” toggle — watch the average correlation collapse and the true sector blocks (oil, banks) emerge.`,
