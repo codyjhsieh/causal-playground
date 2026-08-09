@@ -1,0 +1,306 @@
+// RAG Chatbot — a REAL retrieval-augmented chatbot running entirely on-device.
+// Real chunking → real on-device embeddings (MiniLM) → real cosine vector search
+// → real streamed generation (WebLLM). The sliders (chunk size, overlap, top-k,
+// min-similarity, temperature) reconfigure the ACTUAL pipeline, and the RAG
+// toggle lets you watch grounding kill hallucination live. No keys, no backend.
+
+import { h, clear } from "../lib/dom.js";
+import { lessonLayout, panelSection, slider, toggle, segmented, button } from "../lib/ui.js";
+import { getEmbedder, getChatEngine, streamChat, cosineTopK, hasWebGPU, CHAT_MODELS, DEFAULT_CHAT_MODEL } from "../lib/models.js";
+
+// Built-in corpus — accurate notes on LangChain's stack, so the bot doubles as an
+// interview study buddy. Grounded answers should cite these.
+const CORPUS = [
+  { id: "langgraph-runtime", title: "LangGraph — agent runtime",
+    text: "LangGraph is LangChain's runtime for building stateful, long-running agents. It models an agent as a directed graph of nodes (functions) that communicate through channels (typed state containers). Execution uses the Bulk Synchronous Parallel (BSP) / Pregel model: on each superstep it selects the nodes whose input channels changed, runs them on isolated copies of the state, then applies their updates deterministically. This gives deterministic concurrency and, unlike plain DAG frameworks, supports cycles/loops — essential for agent 'think-act' loops. The design deliberately favors control and durability over hidden abstraction." },
+  { id: "langgraph-durable", title: "LangGraph — durable execution & checkpointing",
+    text: "Because state advances in discrete supersteps, LangGraph can serialize the whole agent at step boundaries. A checkpointer saves the channel values and versions after each node, organized by thread. This enables durable execution: if the process crashes or the server restarts mid-run, the agent resumes exactly where it left off on any machine, with no lost work and no re-running expensive LLM calls. Persistence modes trade durability against latency: 'exit' saves only at the end, 'async' persists in the background, and 'sync' persists before the next step (highest durability, some added latency per step). Checkpoints also power memory, state history, and time-travel debugging." },
+  { id: "langgraph-hitl", title: "LangGraph — human-in-the-loop",
+    text: "The same checkpointing infrastructure powers human-in-the-loop. At a decision point the graph can interrupt: it saves state and stops, rather than keeping a process alive and blocking a thread. When a human responds seconds or hours later, execution resumes from the exact interrupt point. Because paused agents hold no live process, the system scales to many simultaneous pauses and multi-day approval workflows cheaply." },
+  { id: "langsmith", title: "LangSmith — observability & tracing",
+    text: "LangSmith is LangChain's observability platform: it records traces of every LLM/agent run — inputs, outputs, tool calls, latencies, token counts, and cost — for debugging, evaluation, A/B testing, and monitoring. Teams want to log a large fraction of production traffic, so ingestion is high-volume and write-heavy. LangChain outgrew a plain Postgres design and moved trace storage to a columnar analytics store so that ingestion and analytical queries (filters, aggregations over huge trace volumes) stay fast as volume grows. Trace overhead commonly runs a few percent of underlying LLM API spend, so sampling and cost control matter." },
+  { id: "rag", title: "Retrieval-Augmented Generation (RAG)",
+    text: "RAG grounds an LLM in external knowledge. Documents are split into chunks, each chunk is embedded into a vector, and vectors are stored in a vector index. At query time you embed the question, retrieve the top-k most similar chunks (optionally re-ranking them), and put them in the prompt as context. This bypasses context-window limits, adds up-to-date and domain-specific facts, and — crucially — reduces hallucination by making the model answer from provided text. Key trade-offs: bigger chunks and larger top-k raise recall but cost more tokens and latency; a minimum-similarity cutoff avoids stuffing the prompt with irrelevant text." },
+  { id: "semantic-cache", title: "Semantic caching",
+    text: "A semantic cache stores past question→answer pairs as embeddings. A new query that lands within a similarity threshold of a cached one returns the stored answer, skipping the LLM entirely — instant and free. Lowering the threshold raises the hit rate and cost savings but risks serving answers to different-but-similar questions. It is bounded by how much traffic actually repeats, and its accuracy depends on embedding quality." },
+  { id: "interview", title: "The LangChain system-design interview",
+    text: "LangChain's system-design round is about 60 minutes in two halves. First, architecture analysis: review an existing production system and identify its bottlenecks, failure points, and scaling limits. Second, feature design: design a new product feature that integrates with the existing architecture. Real past prompts include event-logging services, alarm/alerting systems, and observability features — i.e. LangSmith-shaped problems. They value practical production reasoning over textbook patterns." },
+];
+
+const now = () => (typeof performance !== "undefined" ? performance.now() : 0);
+
+export function mount(container) {
+  const { root, stage, panel, caption } = lessonLayout({
+    title: "RAG Chatbot — running on your device",
+    idea: "A real retrieval-augmented chatbot: it chunks & embeds documents in your browser, does vector search over them, and streams a grounded answer from a small on-device LLM. Nothing leaves your machine.",
+  });
+  container.appendChild(root);
+
+  const state = {
+    docs: CORPUS.map((d) => ({ ...d })),
+    chunks: [],
+    embedder: null,
+    engine: null,
+    modelId: DEFAULT_CHAT_MODEL,
+    chunkSize: 480, overlap: 80, topK: 4, minSim: 0.25, temperature: 0.4,
+    useRAG: true,
+    busy: false,
+    ready: false,
+  };
+  let abortRequested = false;
+
+  // ---------------- stage: status + chat ----------------
+  stage.style.display = "flex";
+  stage.style.flexDirection = "column";
+  stage.style.gap = "12px";
+
+  const statusBar = h("div", { style: { display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" } });
+  const chatLog = h("div", { style: {
+    flex: "1", minHeight: "300px", maxHeight: "48vh", overflowY: "auto", display: "flex",
+    flexDirection: "column", gap: "10px", padding: "4px 2px",
+  } });
+  const contextView = h("div", {});
+  const inputRow = h("div", { style: { display: "flex", gap: "8px", alignItems: "flex-end" } });
+
+  const ta = h("textarea", {
+    rows: "2", placeholder: "Ask about LangGraph, LangSmith, RAG, the interview…",
+    style: {
+      flex: "1", resize: "vertical", fontFamily: "var(--sans)", fontSize: "14px", padding: "9px 11px",
+      borderRadius: "10px", border: "1px solid var(--glass-hairline)", background: "var(--surface2)", color: "var(--ink)",
+    },
+  });
+  ta.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); ask(); }
+  });
+  const sendBtn = button("Ask", () => ask(), { primary: true });
+  const stopBtn = button("Stop", () => { abortRequested = true; try { state.engine?.interruptGenerate?.(); } catch (e) {} }, { kind: "danger" });
+  stopBtn.style.display = "none";
+  inputRow.append(ta, sendBtn, stopBtn);
+
+  stage.append(statusBar, chatLog, contextView, inputRow);
+
+  // ---------------- load / status ----------------
+  const loadBtn = button("⚡ Load on-device models", () => loadModels(), { primary: true });
+  const statusText = h("span", { class: "note", style: { flex: "1" } });
+  const progWrap = h("div", { class: "meter", style: { width: "160px", display: "none" } }, [h("span", { style: { width: "0%", background: "linear-gradient(90deg,var(--accent),var(--accent2))" } })]);
+  const progBar = progWrap.firstChild;
+  statusBar.append(loadBtn, progWrap, statusText);
+
+  function setProg(frac, text) {
+    progWrap.style.display = "block";
+    progBar.style.width = Math.round((frac || 0) * 100) + "%";
+    if (text) statusText.textContent = text;
+  }
+
+  function addMsg(role, text) {
+    const isUser = role === "user";
+    const bubble = h("div", { style: {
+      alignSelf: isUser ? "flex-end" : "flex-start",
+      maxWidth: "88%", padding: "10px 13px", borderRadius: "13px", fontSize: "14px", lineHeight: "1.55",
+      whiteSpace: "pre-wrap", wordBreak: "break-word",
+      background: isUser ? "linear-gradient(135deg,var(--accent),var(--accent2))" : "var(--surface2)",
+      color: isUser ? "#fff" : "var(--ink)",
+      border: isUser ? "none" : "1px solid var(--glass-hairline)",
+    } }, [text]);
+    const wrap = h("div", { style: { display: "flex", flexDirection: "column" } }, [
+      h("div", { style: { fontSize: "10px", color: "var(--dim)", fontFamily: "var(--mono)", margin: isUser ? "0 4px 2px auto" : "0 auto 2px 4px" }, text: isUser ? "you" : "bot" }),
+      bubble,
+    ]);
+    chatLog.appendChild(wrap);
+    chatLog.scrollTop = chatLog.scrollHeight;
+    return bubble;
+  }
+
+  function showContext(hits, tRetrieve) {
+    clear(contextView);
+    if (!state.useRAG) {
+      contextView.appendChild(h("p", { class: "note", html: "🚫 <strong>RAG is off</strong> — the model is answering from its own weights only, ungrounded. Watch for confident but unsupported claims, then turn RAG back on." }));
+      return;
+    }
+    if (!hits.length) { contextView.appendChild(h("p", { class: "note", text: "No chunks cleared the similarity cutoff — the bot should say it doesn't know." })); return; }
+    contextView.appendChild(h("div", { style: { fontSize: "11px", fontWeight: "700", textTransform: "uppercase", letterSpacing: ".06em", color: "var(--dim)", margin: "2px 0 6px" }, text: `Retrieved context · ${hits.length} chunks · ${Math.round(tRetrieve)} ms` }));
+    hits.forEach((hLite, i) => {
+      contextView.appendChild(h("div", { style: { padding: "8px 10px", marginBottom: "6px", borderRadius: "9px", background: "var(--surface2)", border: "1px solid var(--glass-hairline)" } }, [
+        h("div", { style: { display: "flex", justifyContent: "space-between", marginBottom: "3px" } }, [
+          h("span", { class: "tag", text: `[${i + 1}] ${hLite.item.title}` }),
+          h("span", { class: "tag " + (hLite.score > 0.5 ? "good" : hLite.score > 0.35 ? "warn" : "bad"), text: "sim " + hLite.score.toFixed(2) }),
+        ]),
+        h("div", { style: { fontSize: "12px", color: "var(--dim)", lineHeight: "1.45" }, text: hLite.item.text.slice(0, 220) + (hLite.item.text.length > 220 ? "…" : "") }),
+      ]));
+    });
+  }
+
+  // ---------------- pipeline ----------------
+  function chunkDoc(doc, size, overlap) {
+    const text = doc.text.replace(/\s+/g, " ").trim();
+    const out = [];
+    let i = 0;
+    while (i < text.length) {
+      let end = Math.min(text.length, i + size);
+      if (end < text.length) {
+        const sp = text.lastIndexOf(" ", end);
+        if (sp > i + size * 0.5) end = sp;
+      }
+      out.push({ docId: doc.id, title: doc.title, text: text.slice(i, end).trim() });
+      if (end >= text.length) break;
+      i = Math.max(end - overlap, i + 1);
+    }
+    return out;
+  }
+
+  async function buildIndex() {
+    if (!state.embedder) return;
+    state.busy = true; updateControls();
+    const raw = [];
+    for (const d of state.docs) raw.push(...chunkDoc(d, state.chunkSize, state.overlap));
+    setProg(0.1, `embedding ${raw.length} chunks…`);
+    const t0 = now();
+    const vecs = await state.embedder(raw.map((c) => c.text));
+    raw.forEach((c, i) => (c.vec = vecs[i]));
+    state.chunks = raw;
+    setProg(1, `index ready · ${raw.length} chunks · ${Math.round(now() - t0)} ms`);
+    indexTag.textContent = `${raw.length} chunks`;
+    state.busy = false; updateControls();
+  }
+
+  async function loadModels() {
+    loadBtn.disabled = true;
+    try {
+      setProg(0.02, "loading embedding model (MiniLM)…");
+      state.embedder = await getEmbedder((p) => setProg(0.05 + 0.35 * (p.progress || 0), p.text));
+      setProg(0.42, "embeddings ready — building index…");
+      await buildIndex();
+
+      if (hasWebGPU()) {
+        setProg(0.45, "loading on-device LLM (first time downloads weights)…");
+        try {
+          state.engine = await getChatEngine(state.modelId, (p) => setProg(0.45 + 0.55 * (p.progress || 0), p.text || "loading LLM…"));
+          setProg(1, "✅ ready — ask away");
+        } catch (e) {
+          setProg(1, "⚠️ LLM load failed: " + e.message + " — retrieval still works (extractive mode)");
+        }
+      } else {
+        setProg(1, "⚠️ No WebGPU → retrieval-only (extractive) mode. Use Chrome/Edge for on-device generation.");
+      }
+      state.ready = true;
+      loadBtn.style.display = "none";
+      if (!chatLog.children.length) addMsg("bot", state.engine
+        ? "Ready. I'll answer from the LangChain notes on the right. Try: “How does LangGraph resume after a crash?” or “What does the interview test?”"
+        : "Retrieval is ready (no on-device LLM here). I'll return the most relevant note chunks for your question — a real vector search, just without generation.");
+    } catch (e) {
+      setProg(0, "Failed to load models: " + e.message);
+      loadBtn.disabled = false;
+    }
+    updateControls();
+  }
+
+  async function ask() {
+    const q = ta.value.trim();
+    if (!q || state.busy) return;
+    if (!state.embedder) { statusText.textContent = "Load the models first ↑"; return; }
+    ta.value = "";
+    addMsg("user", q);
+    state.busy = true; abortRequested = false; updateControls();
+
+    // retrieval
+    let hits = [];
+    let tRetrieve = 0;
+    if (state.useRAG && state.chunks.length) {
+      const t0 = now();
+      const qv = await state.embedder(q);
+      hits = cosineTopK(qv, state.chunks, state.topK, state.minSim);
+      tRetrieve = now() - t0;
+    }
+    showContext(hits, tRetrieve);
+
+    // generation
+    if (state.engine) {
+      const context = hits.map((hh, i) => `[${i + 1}] (${hh.item.title}) ${hh.item.text}`).join("\n\n");
+      const messages = state.useRAG
+        ? [
+            { role: "system", content: "You are a precise assistant. Answer the question using ONLY the provided context. Cite sources inline like [1], [2]. If the answer is not in the context, say you don't know." },
+            { role: "user", content: `Context:\n${context || "(none)"}\n\nQuestion: ${q}` },
+          ]
+        : [
+            { role: "system", content: "You are a helpful assistant." },
+            { role: "user", content: q },
+          ];
+      const bubble = addMsg("bot", "");
+      bubble.textContent = "▍";
+      try {
+        await streamChat(state.engine, messages, {
+          temperature: state.temperature, max_tokens: 512,
+          onToken: (_d, full) => { if (!abortRequested) { bubble.textContent = full + "▍"; chatLog.scrollTop = chatLog.scrollHeight; } },
+        });
+        bubble.textContent = bubble.textContent.replace(/▍$/, "");
+      } catch (e) {
+        bubble.textContent = "⚠️ generation error: " + e.message;
+      }
+    } else {
+      // extractive fallback — real retrieval, no generation
+      if (!state.useRAG) addMsg("bot", "(RAG is off and there's no on-device LLM here, so there's nothing to answer from. Turn RAG on to see retrieval.)");
+      else if (!hits.length) addMsg("bot", "I don't have anything relevant in the notes for that.");
+      else addMsg("bot", "Most relevant passages (retrieval-only mode):\n\n" + hits.map((hh, i) => `[${i + 1}] ${hh.item.title}\n${hh.item.text}`).join("\n\n"));
+    }
+    state.busy = false; updateControls();
+  }
+
+  // ---------------- panel ----------------
+  const indexTag = h("span", { class: "tag", text: "0 chunks" });
+  const docList = h("div", { style: { display: "flex", flexDirection: "column", gap: "4px", marginBottom: "10px" } });
+  function renderDocs() {
+    clear(docList);
+    state.docs.forEach((d) => docList.appendChild(h("div", { style: { display: "flex", alignItems: "center", gap: "6px", fontSize: "12.5px" } }, [
+      h("span", { style: { flex: "1", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }, text: d.title }),
+      d.custom ? h("button", { class: "btn", style: { padding: "2px 8px", fontSize: "11px" }, onclick: () => { state.docs = state.docs.filter((x) => x !== d); renderDocs(); markStale(); } }, ["✕"]) : h("span", { class: "tag", text: "built-in" }),
+    ])));
+  }
+  const addTitle = h("input", { placeholder: "New doc title", style: inpStyle() });
+  const addText = h("textarea", { rows: "3", placeholder: "Paste any text — it becomes searchable", style: { ...inpStyleObj(), resize: "vertical" } });
+  const addBtn = button("+ Add document", () => {
+    const t = addText.value.trim(); if (!t) return;
+    state.docs.push({ id: "custom-" + state.docs.length, title: addTitle.value.trim() || "Untitled", text: t, custom: true });
+    addTitle.value = ""; addText.value = ""; renderDocs(); markStale();
+  });
+  const rebuildBtn = button("↻ Rebuild index", () => buildIndex(), { primary: true });
+
+  let stale = false;
+  function markStale() { stale = true; indexTag.textContent = "index stale — rebuild"; indexTag.className = "tag warn"; }
+
+  const chunkSlider = slider({ label: "Chunk size", min: 120, max: 1000, step: 20, value: state.chunkSize, fmt: (v) => v + " ch", hint: "chars", onInput: (v) => { state.chunkSize = v; markStale(); } });
+  const overlapSlider = slider({ label: "Chunk overlap", min: 0, max: 300, step: 10, value: state.overlap, fmt: (v) => v + " ch", onInput: (v) => { state.overlap = v; markStale(); } });
+  const topkSlider = slider({ label: "Top-k retrieved", min: 1, max: 8, step: 1, value: state.topK, fmt: (v) => String(v), hint: "recall↑ tokens↑", onInput: (v) => { state.topK = v; } });
+  const simSlider = slider({ label: "Min similarity", min: 0, max: 0.7, step: 0.01, value: state.minSim, fmt: (v) => v.toFixed(2), hint: "relevance gate", onInput: (v) => { state.minSim = v; } });
+  const tempSlider = slider({ label: "Temperature", min: 0, max: 1.2, step: 0.05, value: state.temperature, fmt: (v) => v.toFixed(2), hint: "creativity", onInput: (v) => { state.temperature = v; } });
+  const ragToggle = toggle({ label: "Use retrieval (RAG)", value: state.useRAG, hint: "grounding", onToggle: (v) => { state.useRAG = v; } });
+  const modelSeg = segmented({ options: CHAT_MODELS.map((m) => ({ label: m.label, value: m.id })), value: state.modelId, onSelect: (v) => { state.modelId = v; if (state.ready) statusText.textContent = "Reload the page to switch model (frees GPU memory)."; } });
+
+  panel.append(
+    panelSection("Knowledge base", [docList, indexTag, h("div", { style: { height: "8px" } }), addTitle, h("div", { style: { height: "6px" } }), addText, h("div", { style: { height: "6px" } }), addBtn, h("div", { style: { height: "6px" } }), rebuildBtn]),
+    panelSection("Retrieval", [chunkSlider, overlapSlider, topkSlider, simSlider]),
+    panelSection("Generation", [
+      h("div", { class: "control" }, [h("span", { class: "control-label", text: "On-device model" }), modelSeg,
+        h("span", { class: "hint", html: hasWebGPU() ? "WebGPU detected ✓ — weights download once, then cached." : "No WebGPU — generation off; retrieval still works." })]),
+      tempSlider, ragToggle,
+    ]),
+  );
+
+  function updateControls() {
+    sendBtn.disabled = state.busy || !state.embedder;
+    stopBtn.style.display = state.busy && state.engine ? "inline-flex" : "none";
+    rebuildBtn.disabled = state.busy || !state.embedder;
+    ta.disabled = state.busy;
+  }
+
+  renderDocs();
+  updateControls();
+
+  caption.innerHTML = "This is the real thing, not a mock: MiniLM embeds every chunk on your device, cosine search ranks them, and a small LLM streams a grounded answer. <strong>Turn RAG off</strong> and re-ask to feel why grounding matters. <strong>Drop min-similarity to 0 and top-k to 8</strong> to see irrelevant chunks pollute the context; <strong>raise chunk size</strong> and watch fewer, fatter chunks change what gets retrieved.";
+
+  return () => { abortRequested = true; try { state.engine?.interruptGenerate?.(); } catch (e) {} };
+
+  function inpStyleObj() {
+    return { width: "100%", fontFamily: "var(--sans)", fontSize: "13px", padding: "8px 10px", borderRadius: "9px", border: "1px solid var(--glass-hairline)", background: "var(--surface2)", color: "var(--ink)" };
+  }
+  function inpStyle() { const o = inpStyleObj(); return o; }
+}
