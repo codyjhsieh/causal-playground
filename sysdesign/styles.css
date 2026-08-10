@@ -228,8 +228,10 @@ input[type="range"]::-moz-range-thumb {
 @keyframes flash { 0% { transform: scale(1); } 40% { transform: scale(1.09); } 100% { transform: scale(1); } }
 
 /* row of stat readouts */
-.stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; }
-.stat { padding: 10px; border-radius: 11px; background: var(--surface2); border: 1px solid var(--glass-hairline); text-align: center; }
+.stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(84px, 1fr)); gap: 10px; }
+.stat { padding: 10px 8px; border-radius: 11px; background: var(--surface2); border: 1px solid var(--glass-hairline); text-align: center; min-width: 0; overflow: hidden; }
+.stat .readout-value { font-size: 19px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stat .readout-sub { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* challenge widget */
 .challenge {

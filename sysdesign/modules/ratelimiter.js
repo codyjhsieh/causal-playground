@@ -23,10 +23,7 @@ const poisson = (l) => { if (l <= 0) return 0; const L = Math.exp(-l); let k = 0
 const NORMALS = ["u1", "u2", "u3", "u4", "u5"];
 
 export function mount(container) {
-  const { root, stage, panel, caption } = lessonLayout({
-    title: "Rate Limiter",
-    idea: "Traffic is already pouring in. Start with no limiter and watch the server melt, then add the bouncer at the door — one piece at a time.",
-  });
+  const { root, stage, panel, caption } = lessonLayout({ title: "Rate Limiter", idea: "" });
   container.appendChild(root);
 
   const S = { arrival: 240, cap: 100, refill: 100, burst: 40, window: 1, algo: "off", perUser: false, noisy: true };
@@ -186,15 +183,13 @@ export function mount(container) {
   const chal = challenge({ goal: "Zero 503s and ≥ 70% success under the spike." });
 
   panel.append(
-    panelSection("Live scoreboard", [statGrid]),
+    panelSection("Live scoreboard", [statGrid, chal]),
     panelSection("Piece 1 · the limiter", [
       h("div", { class: "control" }, [h("span", { class: "control-label", text: "Algorithm" }), algoSeg]),
       h("div", { class: "control" }, [h("span", { class: "control-label", text: "Fairness" }), perUserToggle, noisyToggle]),
     ]),
     knobBox,
   );
-  // challenge above the body
-  root.insertBefore(chal, root.querySelector(".lesson-body"));
 
   function syncControls() {
     const showWin = S.algo === "fixed" || S.algo === "sliding";

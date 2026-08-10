@@ -20,7 +20,7 @@ const MODULES = [
     load: () => import("./modules/home.js") },
 
   { group: "Classic systems", id: "ratelimiter", title: "Rate Limiter",
-    eli5: "A popular service gets more requests than it can safely handle, and it falls over for <em>everyone</em>. A rate limiter is a bouncer at the door: it admits requests only as fast as the system can serve them and turns the rest away cheaply — protecting the many from a traffic spike or a single greedy client.",
+    eli5: "When more requests arrive than a service can handle, it falls over — for <em>everyone</em>. A rate limiter is the bouncer at the door: admit what the system can serve, turn the rest away cheaply.",
     load: () => import("./modules/ratelimiter.js") },
   { group: "Classic systems", id: "cache", title: "Key-Value Cache (LRU / TTL)", soon: true },
   { group: "Classic systems", id: "loadbalancer", title: "Load Balancer", soon: true },
@@ -31,13 +31,13 @@ const MODULES = [
   { group: "Classic systems", id: "alerting", title: "Alerting System", soon: true },
 
   { group: "AI systems", id: "ragbot", title: "RAG Chatbot (on-device)",
-    eli5: "A chatbot that looks things up before it speaks. Instead of trusting the model's memory, it searches a pile of documents for the passages most relevant to your question, hands those to the model, and asks it to answer <em>only</em> from them — grounded, current, and far less likely to make things up.",
+    eli5: "A chatbot that looks things up before it answers. It finds the passages most relevant to your question and tells the model to answer <em>only</em> from them — so it stays grounded instead of guessing.",
     load: () => import("./modules/ragbot.js") },
   { group: "AI systems", id: "semcache", title: "Semantic Cache",
-    eli5: "Lots of users ask the <em>same thing</em> in different words. A semantic cache remembers past questions as points in meaning-space; when a new question lands close enough to an old one, it returns the stored answer and skips the model entirely — instant and free. The catch: “close enough” is a dial. Set it loose and you'll serve confident answers to the <em>wrong</em> question.",
+    eli5: "Many people ask the <em>same thing</em> in different words. A semantic cache returns a stored answer when a new question is close enough to an old one — skipping the model. “Close enough” is a dial: too loose and you answer the <em>wrong</em> question.",
     load: () => import("./modules/semcache.js") },
   { group: "AI systems", id: "tokenomics", title: "Token Economics & Latency",
-    eli5: "An LLM app's bill and its speed are both paid in <strong>tokens</strong>. Every request drags a prompt in and streams an answer out; you pay per token each way, and the answer can't finish before its last token is generated. The napkin math every AI-systems design starts from: tokens × requests = dollars, and how slow is the tail?",
+    eli5: "An LLM app's bill and its speed are both paid in <strong>tokens</strong> — so much per token in, per token out. The napkin math: tokens × requests = dollars, and the answer can't finish before its last token.",
     load: () => import("./modules/tokenomics.js") },
   { group: "AI systems", id: "gateway", title: "LLM Gateway (routing & fallback)", soon: true },
   { group: "AI systems", id: "vector", title: "Vector Search & ANN", soon: true },
@@ -45,10 +45,10 @@ const MODULES = [
 
 // One-line hands-on instruction per built module — what to add/drag, what to watch.
 const HOWTO = {
-  ratelimiter: `Start with the limiter Off and watch the server melt under the spike. Switch to Token Bucket, then tune Refill toward the server's capacity — find the rate that stops 503s without rejecting real users.`,
-  ragbot: `Hit "Load on-device models", then ask a question. Toggle Use-RAG off and re-ask to watch it hallucinate; drop Min-similarity to 0 with Top-k 8 to see junk pollute the context.`,
-  semcache: `Drag the similarity threshold down — watch the hit-rate and cost savings climb while the wrong-answer meter turns red. Find the sweet spot between the two humps.`,
-  tokenomics: `Drag "output tokens" and "requests/day" up — watch $/day and the p99 latency climb, then flip Streaming on to rescue the felt speed (TTFT).`,
+  ratelimiter: `Leave the limiter Off to watch the server melt, then switch to Token bucket and raise Refill toward the capacity line.`,
+  ragbot: `Load the models, ask a question, then toggle RAG off and re-ask to watch it start guessing.`,
+  semcache: `Drag the threshold down — hits and savings rise, but the wrong-answer meter turns red. Aim for the gap between the humps.`,
+  tokenomics: `Push output tokens and requests/day up to watch $/day and p99 climb — then turn Streaming on.`,
 };
 
 const app = document.getElementById("app");

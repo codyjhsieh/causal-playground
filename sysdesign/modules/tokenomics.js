@@ -31,10 +31,7 @@ const bignum = (v) => {
 const ms = (v) => (v >= 1000 ? (v / 1000).toFixed(1) + " s" : Math.round(v) + " ms");
 
 export function mount(container) {
-  const { root, stage, panel, caption } = lessonLayout({
-    title: "Token Economics & Latency",
-    idea: "The napkin math behind every LLM app: tokens in + tokens out, times requests, equals dollars — and the answer can't arrive faster than its last token.",
-  });
+  const { root, stage, panel, caption } = lessonLayout({ title: "Token Economics & Latency", idea: "" });
   container.appendChild(root);
 
   const state = {
@@ -97,7 +94,7 @@ export function mount(container) {
         h("span", { text: bignum(outTok) + " out · " + money(outCost) }),
       ]),
       h("p", { class: "note", style: { marginTop: "10px" },
-        html: "Output tokens are generated one-by-one and usually priced <strong>5–6× higher</strong> than input — so they dominate both the bill and the clock. Input (prompt + retrieved context) is cheap per token but you pay it on <em>every</em> call, and it inflates TTFT via prefill." }),
+        html: "Output tokens cost ~<strong>5–6×</strong> input and dominate both the bill and the clock." }),
     );
   }
 

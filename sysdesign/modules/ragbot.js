@@ -8,32 +8,29 @@ import { h, clear } from "../lib/dom.js";
 import { lessonLayout, panelSection, slider, toggle, segmented, button } from "../lib/ui.js";
 import { getEmbedder, getChatEngine, streamChat, cosineTopK, hasWebGPU, CHAT_MODELS, DEFAULT_CHAT_MODEL } from "../lib/models.js";
 
-// Built-in corpus — accurate notes on LangChain's stack, so the bot doubles as an
-// interview study buddy. Grounded answers should cite these.
+// Built-in corpus — concise, accurate system-design notes, so the bot doubles as
+// an interview study buddy. Grounded answers should cite these.
 const CORPUS = [
-  { id: "langgraph-runtime", title: "LangGraph — agent runtime",
-    text: "LangGraph is LangChain's runtime for building stateful, long-running agents. It models an agent as a directed graph of nodes (functions) that communicate through channels (typed state containers). Execution uses the Bulk Synchronous Parallel (BSP) / Pregel model: on each superstep it selects the nodes whose input channels changed, runs them on isolated copies of the state, then applies their updates deterministically. This gives deterministic concurrency and, unlike plain DAG frameworks, supports cycles/loops — essential for agent 'think-act' loops. The design deliberately favors control and durability over hidden abstraction." },
-  { id: "langgraph-durable", title: "LangGraph — durable execution & checkpointing",
-    text: "Because state advances in discrete supersteps, LangGraph can serialize the whole agent at step boundaries. A checkpointer saves the channel values and versions after each node, organized by thread. This enables durable execution: if the process crashes or the server restarts mid-run, the agent resumes exactly where it left off on any machine, with no lost work and no re-running expensive LLM calls. Persistence modes trade durability against latency: 'exit' saves only at the end, 'async' persists in the background, and 'sync' persists before the next step (highest durability, some added latency per step). Checkpoints also power memory, state history, and time-travel debugging." },
-  { id: "langgraph-hitl", title: "LangGraph — human-in-the-loop",
-    text: "The same checkpointing infrastructure powers human-in-the-loop. At a decision point the graph can interrupt: it saves state and stops, rather than keeping a process alive and blocking a thread. When a human responds seconds or hours later, execution resumes from the exact interrupt point. Because paused agents hold no live process, the system scales to many simultaneous pauses and multi-day approval workflows cheaply." },
-  { id: "langsmith", title: "LangSmith — observability & tracing",
-    text: "LangSmith is LangChain's observability platform: it records traces of every LLM/agent run — inputs, outputs, tool calls, latencies, token counts, and cost — for debugging, evaluation, A/B testing, and monitoring. Teams want to log a large fraction of production traffic, so ingestion is high-volume and write-heavy. LangChain outgrew a plain Postgres design and moved trace storage to a columnar analytics store so that ingestion and analytical queries (filters, aggregations over huge trace volumes) stay fast as volume grows. Trace overhead commonly runs a few percent of underlying LLM API spend, so sampling and cost control matter." },
-  { id: "rag", title: "Retrieval-Augmented Generation (RAG)",
-    text: "RAG grounds an LLM in external knowledge. Documents are split into chunks, each chunk is embedded into a vector, and vectors are stored in a vector index. At query time you embed the question, retrieve the top-k most similar chunks (optionally re-ranking them), and put them in the prompt as context. This bypasses context-window limits, adds up-to-date and domain-specific facts, and — crucially — reduces hallucination by making the model answer from provided text. Key trade-offs: bigger chunks and larger top-k raise recall but cost more tokens and latency; a minimum-similarity cutoff avoids stuffing the prompt with irrelevant text." },
-  { id: "semantic-cache", title: "Semantic caching",
-    text: "A semantic cache stores past question→answer pairs as embeddings. A new query that lands within a similarity threshold of a cached one returns the stored answer, skipping the LLM entirely — instant and free. Lowering the threshold raises the hit rate and cost savings but risks serving answers to different-but-similar questions. It is bounded by how much traffic actually repeats, and its accuracy depends on embedding quality." },
-  { id: "interview", title: "The LangChain system-design interview",
-    text: "LangChain's system-design round is about 60 minutes in two halves. First, architecture analysis: review an existing production system and identify its bottlenecks, failure points, and scaling limits. Second, feature design: design a new product feature that integrates with the existing architecture. Real past prompts include event-logging services, alarm/alerting systems, and observability features — i.e. LangSmith-shaped problems. They value practical production reasoning over textbook patterns." },
+  { id: "caching", title: "Caching (cache-aside, LRU, TTL)",
+    text: "A cache is a small, fast store in front of a slow one. The common pattern is cache-aside: on a read, check the cache; on a miss, load from the database, store it in the cache, and return it. The hit rate is what matters — a 90% hit rate cuts database load roughly tenfold. Caches are bounded, so they need an eviction policy: LRU (least-recently-used) evicts the coldest key when full. A TTL (time-to-live) expires entries so stale data doesn't live forever — a shorter TTL is fresher but lowers the hit rate. Risks: a thundering herd when a hot key expires and every request stampedes the database at once, and cache-stampede/consistency issues on writes (write-through or invalidation help)." },
+  { id: "load-balancing", title: "Load balancing",
+    text: "A load balancer spreads incoming requests across many identical servers so no single one is overwhelmed, and it removes failed servers from rotation via health checks. Algorithms trade simplicity for smartness: round-robin is even but ignores load; least-connections sends work to the least-busy server; consistent hashing keeps a given client/key on the same server (useful for cache locality or sticky sessions). Layer 4 balancers route on IP/port; Layer 7 balancers can route on URL or headers. The balancer itself must not be a single point of failure — run it redundantly." },
+  { id: "cap", title: "CAP theorem & consistency",
+    text: "When a network partition splits your nodes, you can keep the system Consistent (every read sees the latest write) or Available (every request still gets an answer) — not both. That is the CAP trade-off. CP systems refuse some requests to avoid returning stale data; AP systems keep serving and reconcile later (eventual consistency). PACELC extends this: even when there's no partition (Else), you trade Latency against Consistency. Most real systems tune this per operation — strong consistency for a bank balance, eventual for a like count." },
+  { id: "rate-limiting", title: "Rate limiting (token bucket)",
+    text: "A rate limiter caps how many requests a client may make, protecting a service from spikes and abuse. The token bucket is the standard: tokens refill at a steady rate up to a burst capacity, and each request spends one token — if the bucket is empty the request is rejected (HTTP 429). This allows short bursts while bounding the sustained rate. Fixed-window counters are simpler but can admit up to 2× the limit across a window boundary; sliding-window logs smooth that out at higher cost. Limit per API key/user so one noisy client can't starve others; in a cluster the counter must be shared (e.g. in Redis)." },
+  { id: "replication", title: "Replication & quorums",
+    text: "Replication keeps copies of data on multiple nodes for durability and read scaling. In leader-follower, writes go to the leader and replicate to followers; reads can be served by followers, but replication lag means a follower may return slightly stale data (breaking read-your-writes). Quorum systems (N replicas, W write-acks, R read-replies) give tunable consistency: if R + W > N, reads and writes overlap on at least one node, so reads see the latest write. Bigger R/W means stronger consistency but higher latency and lower availability; smaller means the opposite." },
+  { id: "queues", title: "Message queues & backpressure",
+    text: "A message queue decouples producers from consumers: producers append work and return immediately, while consumers process at their own pace. This smooths spikes (the queue absorbs bursts), enables retries, and lets you scale consumers independently. Delivery is usually at-least-once, so consumers must be idempotent (processing the same message twice is safe). Watch the queue depth: if producers outpace consumers for long, the backlog and latency grow without bound — that's when you apply backpressure (slow producers, shed load) or add consumers." },
+  { id: "consistent-hashing", title: "Consistent hashing",
+    text: "Sharding splits data across nodes by key. Naive hashing (key mod N) remaps almost every key when N changes, causing a massive reshuffle when you add or remove a node. Consistent hashing places nodes and keys on a ring; a key belongs to the next node clockwise, so adding/removing a node only moves the keys in one arc — about 1/N of them. Virtual nodes (many ring positions per physical node) even out the load and smooth rebalancing. It's the backbone of distributed caches and databases like Dynamo and Cassandra." },
 ];
 
 const now = () => (typeof performance !== "undefined" ? performance.now() : 0);
 
 export function mount(container) {
-  const { root, stage, panel, caption } = lessonLayout({
-    title: "RAG Chatbot — running on your device",
-    idea: "A real retrieval-augmented chatbot: it chunks & embeds documents in your browser, does vector search over them, and streams a grounded answer from a small on-device LLM. Nothing leaves your machine.",
-  });
+  const { root, stage, panel, caption } = lessonLayout({ title: "RAG Chatbot", idea: "" });
   container.appendChild(root);
 
   const state = {
@@ -63,7 +60,7 @@ export function mount(container) {
   const inputRow = h("div", { style: { display: "flex", gap: "8px", alignItems: "flex-end" } });
 
   const ta = h("textarea", {
-    rows: "2", placeholder: "Ask about LangGraph, LangSmith, RAG, the interview…",
+    rows: "2", placeholder: "Ask about caching, load balancing, CAP, rate limiting…",
     style: {
       flex: "1", resize: "vertical", fontFamily: "var(--sans)", fontSize: "14px", padding: "9px 11px",
       borderRadius: "10px", border: "1px solid var(--glass-hairline)", background: "var(--surface2)", color: "var(--ink)",
@@ -185,7 +182,7 @@ export function mount(container) {
       state.ready = true;
       loadBtn.style.display = "none";
       if (!chatLog.children.length) addMsg("bot", state.engine
-        ? "Ready. I'll answer from the LangChain notes on the right. Try: “How does LangGraph resume after a crash?” or “What does the interview test?”"
+        ? "Ready. I answer from the system-design notes on the right. Try: “When would I use consistent hashing?” or “What is the token bucket?”"
         : "Retrieval is ready (no on-device LLM here). I'll return the most relevant note chunks for your question — a real vector search, just without generation.");
     } catch (e) {
       setProg(0, "Failed to load models: " + e.message);

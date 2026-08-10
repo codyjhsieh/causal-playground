@@ -24,10 +24,7 @@ const EMB_COST = 0.00002;  // $ per embed + vector lookup
 const HIT_MS = 35, MISS_MS = 1500;
 
 export function mount(container) {
-  const { root, stage, panel, caption } = lessonLayout({
-    title: "Semantic Caching",
-    idea: "Serve a stored answer when a new question means the same thing as an old one — skipping the LLM entirely. The whole design lives in one dial: how close is “close enough”?",
-  });
+  const { root, stage, panel, caption } = lessonLayout({ title: "Semantic Caching", idea: "" });
   container.appendChild(root);
 
   const state = { thr: 0.85, dup: 0.45, quality: 0.6 };
@@ -148,12 +145,12 @@ export function mount(container) {
     ctx.font = "600 11px ui-monospace, monospace";
     ctx.fillText("τ = " + state.thr.toFixed(2), thrX, b.y0 + 2);
 
-    // region labels
-    ctx.font = "10px ui-monospace, monospace"; ctx.textBaseline = "top";
-    ctx.fillStyle = "var(--pos)"; ctx.textAlign = "left";
-    ctx.fillText("✓ correct hits", thrX + 6, b.y0 + 6);
-    ctx.fillStyle = "var(--neg)";
-    ctx.fillText("✗ wrong answers", thrX + 6, b.y0 + 20);
+    // region labels (only if there's room right of the threshold)
+    if (b.x1 - thrX > 84) {
+      ctx.font = "10px ui-monospace, monospace"; ctx.textBaseline = "top"; ctx.textAlign = "left";
+      ctx.fillStyle = "var(--pos)"; ctx.fillText("✓ hits", thrX + 6, b.y0 + 26);
+      ctx.fillStyle = "var(--neg)"; ctx.fillText("✗ wrong", thrX + 6, b.y0 + 40);
+    }
   }
 
   function swatch(color, label) {
@@ -194,14 +191,10 @@ export function mount(container) {
   const chal = challenge({ goal: "Hit rate ≥ 55% while wrong answers stay < 2%." });
 
   panel.append(
-    panelSection("Scoreboard", [statGrid]),
+    panelSection("Scoreboard", [statGrid, chal]),
     panelSection("The dial", [thrSlider]),
     panelSection("The world you're in", [dupSlider, qualSlider]),
   );
-
-  const chalWrap = h("div", {});
-  root.insertBefore(chalWrap, root.querySelector(".lesson-body"));
-  chalWrap.appendChild(chal);
 
   // ---------- render ----------
   function render() {
